@@ -1,0 +1,13 @@
+:root {
+  --theme-color-1: #3cbef6;
+  --theme-color-1-l98: #f5fcff;
+  --theme-color-1-l96: #ecf9fe;
+  --theme-color-1-l94: #e2f5fe;
+  --theme-color-1-l40: #098bc3;
+  --theme-color-2: lightseagreen;
+  --theme-color-3: #ece71f;
+  /*--theme-color-3: #fffa20;*/
+  --border-color-1: #e4e7ed;
+  --border-color-2: #f0f4fd;
+  --bg-color-1: #f5f7fa
+}

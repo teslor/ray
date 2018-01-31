@@ -1,0 +1,20 @@
+patch-package
+--- a/node_modules/quill/dist/quill.js
++++ b/node_modules/quill/dist/quill.js
+@@ -4706,7 +4706,7 @@ var Link = function (_Inline) {
+ Link.blotName = 'link';
+ Link.tagName = 'A';
+ Link.SANITIZED_URL = 'about:blank';
+-Link.PROTOCOL_WHITELIST = ['http', 'https', 'mailto', 'tel'];
++Link.PROTOCOL_WHITELIST = ['http', 'https', 'mailto', 'tel', 'file'];
+ 
+ function _sanitize(url, protocols) {
+   var anchor = document.createElement('a');
+@@ -9654,6 +9654,7 @@ var Tooltip = function () {
+     key: 'position',
+     value: function position(reference) {
+       var left = reference.left + reference.width / 2 - this.root.offsetWidth / 2;
++      left = left > 2 ? left : 2
+       // root.scrollTop should be 0 if scrollContainer !== root
+       var top = reference.bottom + this.quill.root.scrollTop;
+       this.root.style.left = left + 'px';
