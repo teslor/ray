@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="/build/icons/256x256.png" alt="Ray Logo" width="128" height="auto">
+</p>
 <h1 align="center">Ray</h1>
 <p align="center">
 Ray is a desktop HTML-powered text editor with advanced features.
