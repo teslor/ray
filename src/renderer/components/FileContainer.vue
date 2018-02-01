@@ -205,10 +205,9 @@
     }
 
     & .el-tabs__new-tab {
-      border: 1px solid var(--theme-color-1);
-      border-radius: 0;
-      color: var(--theme-color-1);
-      font-size: 15px;
+      border: 1px solid var(--theme-color-1-l60);
+      color: var(--theme-color-1-l60);
+      font-size: 14px;
       margin: 5px 4px 0 10px;
       height: 28px;
       width: 28px;

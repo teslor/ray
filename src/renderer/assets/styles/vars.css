@@ -4,6 +4,7 @@
   --theme-color-1-l96: color(var(--theme-color-1) l(96%));
   --theme-color-1-l94: color(var(--theme-color-1) l(94%));
   --theme-color-1-l90: color(var(--theme-color-1) l(90%));
+  --theme-color-1-l60: color(var(--theme-color-1) l(60%));
   --theme-color-1-l40: color(var(--theme-color-1) l(40%));
   --theme-color-2: lightseagreen;
   --theme-color-3: #ece71f;
