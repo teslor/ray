@@ -189,8 +189,8 @@
           this.searchData.finder.reverts.length > 0 &&
           !this.searchData.finder.options.replace) { // there are contents modifications (search highlight); do not revert replace
           try {
-            this.searchData.finder.revert() // sometimes may cause an error
-          } catch (err) { // fallback (TODO: check & remove)
+            this.searchData.finder.revert()
+          } catch (err) { // fallback if an error occurred (restore contents)
             this.editor.setContents(this.searchData.initContents)
           }
         }

@@ -10,7 +10,15 @@ patch-package
  
  function _sanitize(url, protocols) {
    var anchor = document.createElement('a');
-@@ -9654,6 +9654,7 @@ var Tooltip = function () {
+@@ -7030,6 +7030,7 @@ var ScrollBlot = /** @class */ (function (_super) {
+         var _this = _super.call(this, node) || this;
+         _this.scroll = _this;
+         _this.observer = new MutationObserver(function (mutations) {
++            if (_this.domNode.contentEditable === 'false') return // do not process mutations if the editor is disabled
+             _this.update(mutations);
+         });
+         _this.observer.observe(_this.domNode, OBSERVER_CONFIG);
+@@ -9654,6 +9655,7 @@ var Tooltip = function () {
      key: 'position',
      value: function position(reference) {
        var left = reference.left + reference.width / 2 - this.root.offsetWidth / 2;
