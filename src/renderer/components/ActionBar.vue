@@ -2,10 +2,10 @@
   <div class="ab-wrapper">
     <div class="ab-group">
       <div class="ab-group-project">
-        <el-button class="ab-button" :class="{ active: displaySidebar }" type="primary" @click="toggleProjectBar"><i class="fas fa-bars"></i></el-button>
-        <el-button class="ab-button" type="primary" @click="createProject"><i class="fas fa-plus"></i></el-button>
-        <el-button class="ab-button" type="primary" @click="saveProjects"><i class="fas fa-download"></i></el-button>
-        <el-button class="ab-button" type="primary" @click="showProjectList"><i class="fas fa-ellipsis-v"></i></el-button>
+        <el-button class="ab-button" :class="{ active: displaySidebar }" @click="toggleProjectBar"><i class="fas fa-bars"></i></el-button>
+        <el-button class="ab-button" @click="createProject"><i class="fas fa-plus"></i></el-button>
+        <el-button class="ab-button" @click="saveProjects"><i class="fas fa-download"></i></el-button>
+        <el-button class="ab-button" @click="showProjectList"><i class="fas fa-ellipsis-v"></i></el-button>
       </div>
 
       <div class="ab-group-file">
@@ -13,7 +13,6 @@
             :disabled="true"
             class="ab-dropdown"
             placement="bottom-start"
-            type="primary"
             trigger="click"
             :show-timeout="0"
             @click="openFile"
@@ -33,7 +32,6 @@
             v-show="currentFile.dataType"
             class="ab-dropdown"
             placement="bottom-start"
-            type="primary"
             trigger="click"
             :show-timeout="0"
             @click="saveFile"
@@ -46,14 +44,14 @@
           </el-dropdown-menu>
         </el-dropdown>
 
-        <el-button class="ab-button" type="primary" :disabled="!currentFile.path" @click="showFileInExplorer"><i class="fas fa-external-link-alt"></i></el-button>
-        <el-button v-show="currentFile.dataType" class="ab-button" :class="{ active: currentFile.searchMode }" type="primary" @click="toggleSearch"><i class="fas fa-search"></i></el-button>
+        <el-button class="ab-button" :disabled="!currentFile.path" @click="showFileInExplorer"><i class="fas fa-external-link-alt"></i></el-button>
+        <el-button v-show="currentFile.dataType" class="ab-button" :class="{ active: currentFile.searchMode }" @click="toggleSearch"><i class="fas fa-search"></i></el-button>
       </div>
     </div>
 
     <div class="ab-group">
-      <el-button class="ab-button" type="primary" @click="showSettingsDialog"><i class="fas fa-cog"></i></el-button>
-      <el-button class="ab-button" type="primary" @click="showHelpDialog"><i class="fas fa-question"></i></el-button>
+      <el-button class="ab-button" @click="showSettingsDialog"><i class="fas fa-cog"></i></el-button>
+      <el-button class="ab-button" @click="showHelpDialog"><i class="fas fa-question"></i></el-button>
     </div>
   </div>
 </template>
@@ -142,8 +140,26 @@
   .ab-group {
     display: flex;
 
+    & .el-button {
+      padding: 0;
+      width: 41px;
+      height: 30px;
+      background-color: var(--theme-color-1-l90);
+      border-color: var(--border-color-1);
+      color: #888;
+    }
+
+    & .el-button:hover {
+      background-color: var(--theme-color-1-l94);
+      color: #555;
+    }
+
+    & .el-button:focus {
+      background-color: #ceeefd;
+    }
+
     & .active {
-      color: var(--theme-color-3);
+      background-color: #f9f7db !important;
     }
   }
 
@@ -157,21 +173,9 @@
     margin-right: 8px;
   }
 
-  .ab-button {
-    padding: 0;
-    width: 41px;
-    height: 30px;
-  }
-
   .ab-dropdown {
     & .el-button-group {
       display: flex;
-    }
-
-    & .el-button {
-      height: 30px;
-      width: 41px;
-      padding: 0;
     }
 
     & .el-dropdown__caret-button {

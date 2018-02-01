@@ -1,9 +1,10 @@
 :root {
   --theme-color-1: #3cbef6;
-  --theme-color-1-l98: #f5fcff;
-  --theme-color-1-l96: #ecf9fe;
-  --theme-color-1-l94: #e2f5fe;
-  --theme-color-1-l40: #098bc3;
+  --theme-color-1-l98: color(var(--theme-color-1) l(98%));
+  --theme-color-1-l96: color(var(--theme-color-1) l(96%));
+  --theme-color-1-l94: color(var(--theme-color-1) l(94%));
+  --theme-color-1-l90: color(var(--theme-color-1) l(90%));
+  --theme-color-1-l40: color(var(--theme-color-1) l(40%));
   --theme-color-2: lightseagreen;
   --theme-color-3: #ece71f;
   /*--theme-color-3: #fffa20;*/

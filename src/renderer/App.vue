@@ -114,10 +114,6 @@
 
   /********** Electron-UI styles ***********/
 
-  .el-button {
-    border-radius: 0;
-  }
-
   .el-message__content {
     font-size: 15px;
   }
