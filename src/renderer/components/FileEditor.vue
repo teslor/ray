@@ -171,8 +171,13 @@
       })
       // TODO: implement more accurate file change detection
       this.editor.on('text-change', (delta, oldDelta, source) => {
-        if (source !== 'user' || this.file.flags.wasChanged) return
-        this.$store.commit('FILE_SET_FLAGS', { fileId: this.file.id, flags: { wasChanged: true } })
+        if ((!this.file.path && this.editor.getLength() === 1) || !this.editor.history.stack.undo.length) {
+          if (this.file.flags.wasChanged) this.$store.commit('FILE_SET_FLAGS', { fileId: this.file.id, flags: { wasChanged: false } })
+          return
+        }
+        if (!this.file.flags.wasChanged) {
+          this.$store.commit('FILE_SET_FLAGS', { fileId: this.file.id, flags: { wasChanged: true } })
+        }
       })
     },
 
