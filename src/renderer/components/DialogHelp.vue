@@ -22,12 +22,13 @@
         <h2>Files</h2>
         <p>You can create, open and save files in HTML format. All opened files are shown in the tabs (like in browsers).</p>
         <p>It's also possible to open HTML files created in other programs. In this case files are opened in readonly mode.</p>
-        <p>In Search mode a file is also switched to readonly mode</p>
+        <p>In Search Mode you can find/replace text in a file (the file is not editable when this mode is active).</p>
         <p><strong>Note: </strong>If you get an error during opening/saving a file, make sure you have read/write permissions in corresponding location.</p>
         <p class="dh-tips">Tips:</p>
         <ul>
           <li>Ray keeps the latest five files that were recently closed to provide quick access to them.</li>
           <li>You can copy file contents from another program to the buffer and paste in the editor as HTML.</li>
+          <li>You can insert images, video links and hyperlinks in file contents. Hyperlinks are opened in your default browser.</li>
           <li>When creating hyperlinks you can also refer to other local HTML files by using file:/// protocol.</li>
         </ul>
 
@@ -35,13 +36,13 @@
         <p>Project is a way of file organizing to have quick access to files connected together by common subject.<p>
         <p>A project is represented by treelike structure of folders and files, exactly the same as you see in file manager.
           However project folders are virtual and not related to real folders in the file system.
-          So you can easily rearrange project structure and include files from different locations (or different projects can include the same file).</p>
+          So you can easily rearrange project structure and include files from different locations (or different projects can include the same file). And also quickly switch between all your projects.</p>
         <p>Projects are saved automatically before quitting the app or you can save all changes manually by using the corresponding button/shortcut.</p>
         <p class="dh-tips">Tips:</p>
         <ul>
-          <li>You can drag and drop folders/files inside project tree view</li>
+          <li>You can drag and drop folders/files inside project tree view.</li>
           <li>The useful approach could be to create only one root folder for your project on your hard drive and keep all related files in it, but all folder structure - to create inside the app.</li>
-          <li>Structure for all projects is saved in the application configuration file (see below)</li>
+          <li>Structure for all projects is saved in the application configuration file (see below).</li>
         </ul>
 
         <h2>Settings</h2>
@@ -50,8 +51,8 @@
 
         <h2>Configuration File</h2>
         <p>All program settings are saved in the configuration file config.json located in the application folder.</p>
-        <p>You can see it in file explorer by clicking the button in the Settings dialog</p>
-        <p>It's highly recommended to backup this file from time to time (especially if you have many projects)</p>
+        <p>You can see it in file explorer by clicking the button in the Settings dialog.</p>
+        <p>It's highly recommended to backup this file from time to time (especially if you have many projects).</p>
         <br>
         <p><strong>Thank you for using Ray!</strong></p>
       </el-tab-pane>
@@ -60,7 +61,7 @@
         <template v-for="sc in shortcuts">
           <h2>{{ sc.section }}</h2>
           <div class="dh-sc-row" v-for="item in sc.items">
-            <div class="col1">{{ item.keys }}</div>
+            <div class="col1"><el-tag type="success">{{ item.keys }}</el-tag></div>
             <div class="col2">{{ item.text }}</div>
             <div class="col3" v-if="item.icon"><i :class="item.icon"></i></div>
           </div>
@@ -109,7 +110,7 @@
           items: [
             { keys: 'Ctrl + N', text: 'Create file (Add New Tab)', icon: 'fas fa-plus fa-sm' },
             { keys: 'Ctrl + O', text: 'Open File(s)', icon: 'far fa-folder-open fa-sm' },
-            { keys: 'Ctrl + S', text: 'Save File / Save File as', icon: 'far fa-clone fa-sm' },
+            { keys: 'Ctrl + S', text: 'Save File / Save File As', icon: 'far fa-clone fa-sm' },
             { keys: 'Ctrl + W', text: 'Close File' },
             { keys: 'Ctrl + F', text: 'Find Text in File', icon: 'fas fa-search fa-sm' },
             { keys: 'Ctrl + Shift + E', text: 'Show File in Explorer', icon: 'fas fa-external-link-alt' }
@@ -173,6 +174,7 @@
       overflow: auto;
       font-size: 16px;
       line-height: 2;
+      padding-right: 10px;
 
       & h2 {
         font-size: 18px;
@@ -204,6 +206,10 @@
     padding: 5px 20px;
     display: flex;
     background-color: var(--bg-color-1);
+
+    & .el-tag {
+      font-size: 14px;
+    }
 
     & .col1 {
       min-width: 30%;

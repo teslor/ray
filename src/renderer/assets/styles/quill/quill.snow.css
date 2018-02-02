@@ -634,7 +634,7 @@
   padding: 2px 4px;
 }
 .ql-snow .ql-editor pre.ql-syntax {
-  background-color: #23241f;
+  background-color: #777;
   color: #f8f8f2;
   overflow: visible;
 }

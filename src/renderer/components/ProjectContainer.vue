@@ -173,5 +173,6 @@
   .pc-button {
     height: 39px;
     width: 100%;
+    border-radius: 0;
   }
 </style>

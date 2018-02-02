@@ -2,7 +2,7 @@
   <div class="ab-wrapper">
     <div class="ab-group">
       <div class="ab-group-project">
-        <el-button class="ab-button" :class="{ active: displaySidebar }" @click="toggleProjectBar"><i class="fas fa-bars"></i></el-button>
+        <el-button class="ab-button" :class="{ highlighted: displaySidebar }" @click="toggleProjectBar"><i class="fas fa-bars"></i></el-button>
         <el-button class="ab-button" @click="createProject"><i class="fas fa-plus"></i></el-button>
         <el-button class="ab-button" @click="saveProjects"><i class="fas fa-download"></i></el-button>
         <el-button class="ab-button" @click="showProjectList"><i class="fas fa-ellipsis-v"></i></el-button>
@@ -40,12 +40,12 @@
           <i class="far fa-clone"></i>
 
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item :disabled="!currentFile.path">Save File As</el-dropdown-item>
+            <el-dropdown-item>Save File As</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
 
         <el-button class="ab-button" :disabled="!currentFile.path" @click="showFileInExplorer"><i class="fas fa-external-link-alt"></i></el-button>
-        <el-button v-show="currentFile.dataType" class="ab-button" :class="{ active: currentFile.searchMode }" @click="toggleSearch"><i class="fas fa-search"></i></el-button>
+        <el-button v-show="currentFile.dataType" class="ab-button" :class="{ highlighted: currentFile.searchMode }" @click="toggleSearch"><i class="fas fa-search"></i></el-button>
       </div>
     </div>
 
@@ -149,17 +149,21 @@
       color: #888;
     }
 
+    & .el-button:focus {
+      background-color: #ceeefd;
+    }
+
     & .el-button:hover {
       background-color: var(--theme-color-1-l94);
       color: #555;
     }
 
-    & .el-button:focus {
-      background-color: #ceeefd;
+    & .el-button.highlighted {
+      background-color: #f9f7db;
     }
 
-    & .active {
-      background-color: #f9f7db !important;
+    & .el-button.is-disabled {
+      color: #aaa;
     }
   }
 
