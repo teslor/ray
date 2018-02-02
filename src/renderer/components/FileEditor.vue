@@ -217,6 +217,7 @@
         this.resetSearch() // reset previous search
         if (!this.searchString || !this.replaceString) return
 
+        this.editor.enable() // keep changes in history
         this.regexpString = RegExp(this.escapeRegExp(this.searchString), this.isMatchCase ? 'g' : 'gi')
         this.searchData.finder = findAndReplaceDOMText(this.editorElement, {
           find: this.regexpString,
@@ -227,6 +228,9 @@
           }
         })
         this.searchData.matches = this.searchData.finder.reverts.length
+        setTimeout(() => {
+          this.editor.disable()
+        }, 10)
       },
       escapeRegExp (s) {
         return String(s).replace(/([.*+?^=!:${}()|[\]/\\])/g, '\\$1')
