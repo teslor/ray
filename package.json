@@ -2,11 +2,11 @@
   "name": "ray",
   "version": "0.1.0",
   "author": {
-    "name": "Pavel Dediukhin",
+    "name": "Pavel D.",
     "email": "pvd367@gmail.com"
   },
-  "description": "HTML-powered text editor and personal organizer",
-  "keywords": ["html", "text", "wysiwyg", "editor", "viewer", "note", "personal", "organizer"],
+  "description": "Desktop HTML-powered text editor with advanced features",
+  "keywords": ["html", "text", "editor", "viewer", "note", "wysiwyg"],
   "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
