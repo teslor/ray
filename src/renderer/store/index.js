@@ -27,11 +27,11 @@ const state = {
   newFileName: 'File-1',
   configLoading: false,
 
-  currentProject: {},
-  projects: [],
   currentFile: {},
   activeFiles: [],
   recentFiles: [],
+  currentProject: {},
+  projects: [],
   settings: {
     editor: {
       baseFontSize: defaultValues.baseFontSize,
@@ -184,22 +184,22 @@ const mutations = {
   },
 
   [types.VIEW_TOGGLE_SIDEBAR] (state, flag) {
-    if (flag) state.view.sidebar.visible = flag
+    if (flag !== undefined) state.view.sidebar.visible = flag
     else state.view.sidebar.visible = !state.view.sidebar.visible
   },
 
   [types.VIEW_TOGGLE_DIALOG_PROJECTS] (state, flag) {
-    if (flag) state.view.dialogProjects.visible = flag
+    if (flag !== undefined) state.view.dialogProjects.visible = flag
     else state.view.dialogProjects.visible = !state.view.dialogProjects.visible
   },
 
   [types.VIEW_TOGGLE_DIALOG_SETTINGS] (state, flag) {
-    if (flag) state.view.dialogSettings.visible = flag
+    if (flag !== undefined) state.view.dialogSettings.visible = flag
     else state.view.dialogSettings.visible = !state.view.dialogSettings.visible
   },
 
   [types.VIEW_TOGGLE_DIALOG_HELP] (state, flag) {
-    if (flag) state.view.dialogHelp.visible = flag
+    if (flag !== undefined) state.view.dialogHelp.visible = flag
     else state.view.dialogHelp.visible = !state.view.dialogHelp.visible
   },
 
@@ -227,7 +227,7 @@ const actions = {
         }
       }
       // Projects
-      if (configStore.projects) {
+      if (configStore.projects && configStore.projects.length) {
         configStore.projects.forEach(project => {
           commit(types.PROJECT_ADD, {
             name: project.name,
@@ -262,6 +262,7 @@ const actions = {
       commit('BUS_ADD_MESSAGE', {
         section: 'notification', message: { text: 'Unable to load/create configuration file', type: 'error' }
       })
+      await dispatch('createNewFile')
     }
     return true
   },
@@ -306,8 +307,8 @@ const actions = {
     return true
   },
 
-  async saveProjects ({ commit }) {
-    if (!appConfig) return
+  async saveProjects ({ commit, state }) {
+    if (!appConfig || !state.projects.length) return
 
     try {
       appConfig.set('currentProject', state.currentProject.name ? state.currentProject.name : '')

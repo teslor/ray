@@ -1,8 +1,12 @@
 {
   "name": "ray",
   "version": "0.1.0",
-  "author": "Pavel Dediukhin <pvd367@gmail.com>",
-  "description": "HTML-powered text editor",
+  "author": {
+    "name": "Pavel Dediukhin",
+    "email": "pvd367@gmail.com"
+  },
+  "description": "HTML-powered text editor and personal organizer",
+  "keywords": ["html", "text", "wysiwyg", "editor", "viewer", "note", "personal", "organizer"],
   "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
@@ -39,10 +43,7 @@
       "icon": "build/icons"
     },
     "nsis": {
-      "oneClick": false,
-      "perMachine": false,
-      "allowElevation": true,
-      "allowToChangeInstallationDirectory": true
+      "artifactName": "${productName}-${version}-x64.${ext}"
     }
   },
   "dependencies": {

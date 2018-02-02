@@ -24,6 +24,8 @@ const winURL = process.env.NODE_ENV === 'development'
 
 function createWindow () {
   let mainWindowOptions = {
+    show: false,
+    backgroundColor: '#effafe',
     width: 1200,
     height: 800,
     minWidth: 800,
@@ -62,6 +64,10 @@ function createWindow () {
 
   mainWindow.on('closed', () => {
     mainWindow = null
+  })
+
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show()
   })
 }
 
