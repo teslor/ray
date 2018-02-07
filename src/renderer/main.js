@@ -7,6 +7,7 @@ import {
 } from 'element-ui'
 
 // Vendor CSS
+import '../../static/vendor/fonts/fonts.css'
 import '../../static/vendor/fontawesome/css/fontawesome-all.min.css'
 import '../../static/vendor/element-ui/theme/index.css'
 import 'jstree/dist/themes/default/style.css'

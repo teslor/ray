@@ -86,8 +86,8 @@
 </script>
 
 <style>
-  @import './assets/styles/quill/quill.snow.css';
   @import './assets/styles/vars.css';
+  @import './assets/styles/quill/quill.snow.css';
 
   /********** Main global styles **********/
 
