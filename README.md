@@ -38,7 +38,7 @@ These features are planned for future releases (and are subject to change):
 * [Vuex](https://github.com/vuejs/vuex)
 * [Electron-vue](https://github.com/SimulatedGREG/electron-vue)
 * [Element](https://github.com/ElemeFE/element)
-* [Quill](https://github.com/atlassian/react-beautiful-dnd)
+* [Quill](https://github.com/quilljs/quill)
 
 ---
 
