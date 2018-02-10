@@ -55,6 +55,7 @@
         <p>It's highly recommended to backup this file from time to time (especially if you have many projects).</p>
         <br>
         <p><strong>Thank you for using Ray!</strong></p>
+        <p><strong>Version: 0.2.0</strong></p>
       </el-tab-pane>
 
       <el-tab-pane label="Shortcuts">
