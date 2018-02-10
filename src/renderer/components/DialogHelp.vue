@@ -102,7 +102,8 @@
             { keys: 'Ctrl + Alt + O', text: 'Show Project List', icon: 'fas fa-ellipsis-v fa-sm' },
             { keys: 'Ctrl + Alt + S', text: 'Save Projects', icon: 'fas fa-download' },
             { keys: 'Ctrl + Alt + R', text: 'Rename Current Project', icon: 'far fa-edit' },
-            { keys: 'Ctrl + Alt + W', text: 'Close Current Project' }
+            { keys: 'Ctrl + Alt + W', text: 'Close Current Project' },
+            { keys: 'Ctrl + Alt + =', text: 'Add Active File to Current Project', icon: 'fas fa-angle-double-left' }
           ]
         },
         {
