@@ -6,8 +6,8 @@
  */
 .ql-container {
   box-sizing: border-box;
-  font-family: system-ui;
-  font-size: 13px;
+  /*font-family: BlinkMacSystemFont, Roboto, sans-serif;*/
+  /*font-size: 13px;*/
   height: 100%;
   margin: 0px;
   position: relative;
@@ -31,7 +31,7 @@
 }
 .ql-editor {
   box-sizing: border-box;
-  line-height: 1.42;
+  line-height: 1.6;
   height: 100%;
   outline: none;
   overflow-y: auto;
@@ -97,13 +97,13 @@
   width: 1.2em;
 }
 .ql-editor li:not(.ql-direction-rtl)::before {
-  margin-left: -1.5em;
+  margin-left: -1.7em;
   margin-right: 0.5em;
   text-align: right;
 }
 .ql-editor li.ql-direction-rtl::before {
   margin-left: 0.5em;
-  margin-right: -1.5em;
+  margin-right: -1.7em;
 }
 .ql-editor ol li:not(.ql-direction-rtl),
 .ql-editor ul li:not(.ql-direction-rtl) {

@@ -15,6 +15,7 @@ import { defaultValues, renderHtml } from '../utils'
 Vue.use(Vuex)
 
 const appConfig = remote.getGlobal('config')
+const fontFamily = 'BlinkMacSystemFont,Segoe UI,Oxygen,Ubuntu,Cantarell,Helvetica Neue,sans-serif'
 const maxRecentFiles = 5
 let newFileId = 1
 
@@ -34,6 +35,7 @@ const state = {
   projects: [],
   settings: {
     editor: {
+      mainFont: defaultValues.mainFont,
       baseFontSize: defaultValues.baseFontSize,
       fontColor: defaultValues.fontColor,
       backgroundColor: defaultValues.backgroundColor
@@ -63,7 +65,9 @@ const getters = {
   },
   editorStyle: state => {
     const s = state.settings.editor
-    let style = `font-size:${parseInt(s.baseFontSize)}px;`
+    let style = ''
+    style += `font-family:${s.mainFont === 'Auto' ? fontFamily : s.mainFont + ',' + fontFamily};`
+    style += `font-size:${parseInt(s.baseFontSize)}px;`
     style += `color:${s.fontColor};`
     style += `background-color:${s.backgroundColor};`
     return style
@@ -177,7 +181,7 @@ const mutations = {
 
   [types.SETTINGS_SET] (state, settings) {
     Object.keys(settings).forEach(section => {
-      Object.keys(state.settings[section]).forEach(key => {
+      Object.keys(settings[section]).forEach(key => {
         state.settings[section][key] = settings[section][key]
       })
     })

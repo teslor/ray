@@ -111,7 +111,7 @@
         this.addFile(filePath, true)
       },
       addFile (filePath, isRoot = false) {
-        const parent = isRoot ? null : this.currentNode
+        const parent = isRoot ? null : (!this.currentNode || this.currentNodeType === 'file' ? null : this.currentNode)
         this.treeElementRef.create_node(parent, { type: 'file', text: path.basename(filePath, path.extname(filePath)), data: { path: filePath } })
         if (!isRoot) this.treeElementRef.open_node(parent)
         this.$nextTick(() => { this.updateProjectData() })
@@ -187,6 +187,8 @@
     flex: 1;
     overflow: auto;
     background: linear-gradient(180deg, #fefefe 0%, #fcfcfc 100%);
+    font-family: BlinkMacSystemFont, Roboto, sans-serif;
+    font-size: 15px;
 
     & .fa-folder {
       color: moccasin;

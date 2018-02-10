@@ -8,6 +8,11 @@
       width="450px"
       @open="handleDialogOpen">
     <el-form class="ds-form" :model="editorSettings" label-width="180px">
+      <el-form-item label="Main Font">
+        <el-select class="form-select" v-model="editorSettings.mainFont" placeholder="Select Font">
+          <el-option v-for="item in fonts" :key="item" :value="item"/>
+        </el-select>
+      </el-form-item>
       <el-form-item label="Base Font Size">
         <el-select class="form-select" v-model="editorSettings.baseFontSize" placeholder="Select Font Size">
           <el-option v-for="item in fontSizes" :key="item" :value="item"/>
@@ -41,8 +46,10 @@
 
     data () {
       return {
+        fonts: ['Auto', 'Helvetica', 'Roboto', 'Verdana'],
         fontSizes: ['14 px', '16 px', '18 px', '20 px', '22 px', '24 px'],
         editorSettings: {
+          mainFont: '',
           baseFontSize: '',
           fontColor: '',
           backgroundColor: ''
@@ -61,9 +68,9 @@
         this.$store.commit('VIEW_TOGGLE_DIALOG_SETTINGS', false)
       },
       handleDialogOpen () {
-        this.editorSettings.baseFontSize = this.$store.state.settings.editor.baseFontSize
-        this.editorSettings.fontColor = this.$store.state.settings.editor.fontColor
-        this.editorSettings.backgroundColor = this.$store.state.settings.editor.backgroundColor
+        Object.keys(this.editorSettings).forEach(key => {
+          this.editorSettings[key] = this.$store.state.settings.editor[key]
+        })
       },
       handleShowInExplorerClick () {
         const appConfig = this.$electron.remote.getGlobal('config')

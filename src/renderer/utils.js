@@ -1,4 +1,5 @@
 const defaultValues = {
+  mainFont: 'Roboto',
   baseFontSize: '18 px',
   fontColor: '#070707',
   backgroundColor: '#fafdff'

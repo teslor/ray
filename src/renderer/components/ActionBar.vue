@@ -1,14 +1,19 @@
 <template>
   <div class="ab-wrapper">
     <div class="ab-group">
-      <div class="ab-group-project">
+      <div class="ab-group-1">
         <el-button class="ab-button" :class="{ highlighted: displaySidebar }" @click="toggleProjectBar"><i class="fas fa-bars"></i></el-button>
         <el-button class="ab-button" @click="createProject"><i class="fas fa-plus"></i></el-button>
         <el-button class="ab-button" @click="saveProjects"><i class="fas fa-download"></i></el-button>
         <el-button class="ab-button" @click="showProjectList"><i class="fas fa-ellipsis-v"></i></el-button>
       </div>
 
-      <div class="ab-group-file">
+      <div class="ab-group-1">
+        <el-button class="ab-button" :disabled="!currentFile.path || !currentProject.name" @click="addFileToProject"><i class="fas fa-angle-double-left"></i></el-button>
+        <el-button class="ab-button" :disabled="!currentFile.path" @click="showFileInExplorer"><i class="fas fa-external-link-alt"></i></el-button>
+      </div>
+
+      <div class="ab-group-2">
         <el-dropdown
             :disabled="true"
             class="ab-dropdown"
@@ -44,7 +49,6 @@
           </el-dropdown-menu>
         </el-dropdown>
 
-        <el-button class="ab-button" :disabled="!currentFile.path" @click="showFileInExplorer"><i class="fas fa-external-link-alt"></i></el-button>
         <el-button v-show="currentFile.dataType" class="ab-button" :class="{ highlighted: currentFile.searchMode }" @click="toggleSearch"><i class="fas fa-search"></i></el-button>
       </div>
     </div>
@@ -109,6 +113,9 @@
       saveFileAs () {
         ipc.send('save-file-dialog')
       },
+      addFileToProject () {
+        this.$store.commit('BUS_ADD_MESSAGE', { section: 'project', message: { text: 'add-file', filePath: this.currentFile.path } })
+      },
       showFileInExplorer () {
         this.$store.commit('BUS_ADD_MESSAGE', { section: 'file', message: { text: 'show-in-folder' } })
       },
@@ -163,18 +170,18 @@
     }
 
     & .el-button.is-disabled {
+      background-color: var(--theme-color-1-l94);
       color: #aaa;
     }
   }
 
-  .ab-group-project {
+  .ab-group-1 {
     display: flex;
     margin-right: 16px;
   }
 
-  .ab-group-file {
+  .ab-group-2 {
     display: flex;
-    margin-right: 8px;
   }
 
   .ab-dropdown {
