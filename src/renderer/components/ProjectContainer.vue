@@ -139,7 +139,6 @@
         this.$store.dispatch('saveProjects')
       },
       addFile (filePath) {
-        console.log(111)
         this.$refs.ref_tree.addFile(filePath)
       }
     }
