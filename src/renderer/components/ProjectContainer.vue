@@ -25,6 +25,7 @@
       ...mapState({
         projects: state => state.projects,
         currentProject: state => state.currentProject,
+        currentFile: state => state.currentFile,
         busMessageProject: state => state.bus.project,
         sidebarStyle (state) {
           const sidebarWidth = state.view.sidebar.width
@@ -51,6 +52,10 @@
             break
           case 'save-all':
             this.saveProjects()
+            break
+          case 'add-file':
+            if (!this.currentProject.name || !message.filePath) return
+            this.addFile(message.filePath)
         }
       }
     },
@@ -92,6 +97,9 @@
       this.$Mousetrap.bindGlobal(['command+alt+w', 'ctrl+alt+w'], () => {
         if (this.allowShortcuts) this.$store.commit('PROJECT_SET_CURRENT', null)
       })
+      this.$Mousetrap.bindGlobal(['command+alt+=', 'ctrl+alt+='], () => {
+        if (this.allowShortcuts) this.$store.commit('BUS_ADD_MESSAGE', { section: 'project', message: { text: 'add-file', filePath: this.currentFile.path } })
+      })
     },
 
     methods: {
@@ -129,6 +137,9 @@
       },
       saveProjects () {
         this.$store.dispatch('saveProjects')
+      },
+      addFile (filePath) {
+        this.$refs.ref_tree.addFile(filePath)
       }
     }
   }
