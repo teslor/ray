@@ -12,8 +12,8 @@ Create, style, organize your personal notes!
 ![Main Screenshot](/static/screenshots/win.png)
 
 ### :surfer: Platforms
-Ray is based on Electron platform and can be run on Windows, MacOS and Linux. 
-At this moment you can download distributive for Windows (tested on Windows 10), MacOS and Linux releases will be added later.
+Ray is based on Electron platform and can be run on Windows, macOS and Linux. 
+At this moment you can download distributive for Windows (tested on Windows 10), macOS and Linux releases will be added later.
 
 <a href="https://github.com/teslor/ray/releases/download/v0.2.0/Ray-0.2.0-x64.exe">Download v0.2.0 for Windows x64</a>
 
