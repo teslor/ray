@@ -33,7 +33,7 @@
       "dist/electron/**/*"
     ],
     "mac": {
-      "icon": "build/icons/icon.icns"
+      "icon": "build/icons/icons.icns"
     },
     "win": {
       "target": "nsis",
