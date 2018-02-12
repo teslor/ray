@@ -216,11 +216,12 @@
     }
 
     & .el-tabs__new-tab:hover {
-      background-color: var(--theme-color-1-l96);
+      background-color: var(--theme-color-1-l94);
+      color: #555;
     }
 
     & .el-tabs__new-tab:focus {
-      background-color: var(--theme-color-1-l94);
+      background-color: #ceeefd;
     }
 
     & .el-tabs__item.is-active, & .el-tabs__item:hover {
