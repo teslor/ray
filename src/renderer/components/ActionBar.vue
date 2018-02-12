@@ -2,15 +2,15 @@
   <div class="ab-wrapper">
     <div class="ab-group">
       <div class="ab-group-1">
-        <el-button class="ab-button" :class="{ highlighted: displaySidebar }" @click="toggleProjectBar"><i class="fas fa-bars"></i></el-button>
-        <el-button class="ab-button" @click="createProject"><i class="fas fa-plus"></i></el-button>
-        <el-button class="ab-button" @click="saveProjects"><i class="fas fa-download"></i></el-button>
-        <el-button class="ab-button" @click="showProjectList"><i class="fas fa-ellipsis-v"></i></el-button>
+        <el-button class="ab-button" :class="{ highlighted: displaySidebar }" @click="toggleProjectBar" title="Show/Hide Project Bar"><i class="fas fa-bars"></i></el-button>
+        <el-button class="ab-button" @click="createProject"><i class="fas fa-plus" title="New Project"></i></el-button>
+        <el-button class="ab-button" @click="saveProjects"><i class="fas fa-download" title="Download"></i></el-button>
+        <el-button class="ab-button" @click="showProjectList"><i class="fas fa-ellipsis-v" title="My Projects"></i></el-button>
       </div>
 
       <div class="ab-group-1">
-        <el-button class="ab-button" :disabled="!currentFile.path || !currentProject.name" @click="addFileToProject"><i class="fas fa-angle-double-left"></i></el-button>
-        <el-button class="ab-button" :disabled="!currentFile.path" @click="showFileInExplorer"><i class="fas fa-external-link-alt"></i></el-button>
+        <el-button class="ab-button" :disabled="!currentFile.path || !currentProject.name" @click="addFileToProject" title="Add Document to Project"><i class="fas fa-angle-double-left"></i></el-button>
+        <el-button class="ab-button" :disabled="!currentFile.path" @click="showFileInExplorer" title="View in Explorer/Finder"><i class="fas fa-external-link-alt"></i></el-button>
       </div>
 
       <div class="ab-group-2">
@@ -22,7 +22,8 @@
             :show-timeout="0"
             @click="openFile"
             @command="openFileByPath"
-            split-button>
+            split-button
+            title="Open">
           <i class="far fa-folder-open"></i>
 
           <el-dropdown-menu slot="dropdown">
@@ -41,21 +42,22 @@
             :show-timeout="0"
             @click="saveFile"
             @command="saveFileAs"
-            split-button>
-          <i class="far fa-clone"></i>
+            split-button
+            title="Save">
+          <i class="far fa-save"></i>
 
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>Save File As</el-dropdown-item>
+            <el-dropdown-item><i class="far fa-clone"></i>&nbsp;&nbsp;Save File As</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
 
-        <el-button v-show="currentFile.dataType" class="ab-button" :class="{ highlighted: currentFile.searchMode }" @click="toggleSearch"><i class="fas fa-search"></i></el-button>
+        <el-button v-show="currentFile.dataType" class="ab-button" :class="{ highlighted: currentFile.searchMode }" @click="toggleSearch" title="Search"><i class="fas fa-search"></i></el-button>
       </div>
     </div>
 
     <div class="ab-group">
-      <el-button class="ab-button" @click="showSettingsDialog"><i class="fas fa-cog"></i></el-button>
-      <el-button class="ab-button" @click="showHelpDialog"><i class="fas fa-question"></i></el-button>
+      <el-button class="ab-button" @click="showSettingsDialog" title="Settings"><i class="fas fa-cog"></i></el-button>
+      <el-button class="ab-button" @click="showHelpDialog" title="Help"><i class="fas fa-question"></i></el-button>
     </div>
   </div>
 </template>

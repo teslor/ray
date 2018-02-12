@@ -27,11 +27,11 @@
     </el-form>
     <div slot="footer" class="dialog-footer">
       <div>
-        <el-button class="dialog-icon-button" type="primary" @click="handleShowInExplorerClick"><i class="fas fa-external-link-alt"></i></el-button>
+        <el-button class="dialog-icon-button" type="primary" @click="handleShowInExplorerClick" title="Navigate to config.json in Explorer/Finder"><i class="fas fa-external-link-alt"></i></el-button>
       </div>
       <div>
-        <el-button type="primary" @click="handleResetClick">Reset</el-button>
-        <el-button type="primary" @click="handleApplyClick">Apply</el-button>
+        <el-button type="primary" @click="handleResetClick" title="Reset Settings">Reset</el-button>
+        <el-button type="primary" @click="handleApplyClick" title="Apply Changes">Apply</el-button>
       </div>
     </div>
   </el-dialog>
