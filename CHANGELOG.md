@@ -1,3 +1,8 @@
+# 0.2.1
+
+- Fixed build failure due to build looking for icon.icns instead of icons.icns
+
+
 # 0.2.0
 
 - Add font selector. "Roboto" font is used by default.
