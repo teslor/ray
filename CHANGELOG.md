@@ -1,4 +1,4 @@
-# 0.2.1
+# 0.2.1 (upcoming)
 
 - Fixed failing build due to package.json looking for icon.icns instead of icons.icns
 - Changed 'MacOS' to 'macOS' in README
