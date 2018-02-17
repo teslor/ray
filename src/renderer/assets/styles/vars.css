@@ -11,5 +11,7 @@
   /*--theme-color-3: #fffa20;*/
   --border-color-1: #e4e7ed;
   --border-color-2: #f0f4fd;
-  --bg-color-1: #f5f7fa
+  --bg-color-1: #f5f7fa;
+
+  --sb-min-width: 244px;
 }

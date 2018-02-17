@@ -3,7 +3,9 @@
     <main class="mv-main">
       <action-bar/>
       <div class="mv-elements">
-        <project-container v-show="displaySidebar"/>
+        <transition name="sb">
+          <project-container v-show="displaySidebar"/>
+        </transition>
         <file-container/>
       </div>
     </main>
@@ -72,5 +74,22 @@
     flex: 1;
     display: flex;
     border-top: 1px solid var(--border-color-1);
+  }
+
+  .sb-enter-active, .sb-leave-active {
+    transition: width 0.15s cubic-bezier(0.2, 0.4, 0.5, 1) !important;
+  }
+  .sb-enter-to {
+    min-width: 0 !important;
+  }
+  .sb-enter, .sb-leave-to {
+    min-width: 0 !important;
+    width: 0 !important;
+  }
+  .sb-enter-to .pt-action-bar, .sb-leave-to .pt-action-bar {
+    min-width: var(--sb-min-width);
+  }
+  .sb-enter-to .pt-tree, .sb-leave-to .pt-tree {
+    overflow: hidden;
   }
 </style>

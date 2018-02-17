@@ -61,13 +61,16 @@
     },
 
     mounted () {
+      this.sbMinWidth = 244
+      this.sbMaxWidth = 600
+
       // Wrapper resize handler
       $('.pc-wrapper').resizable({
         handleSelector: '.pc-divider',
         resizeHeight: false,
         onDrag: throttle((e, $el, newWidth) => {
-          if (newWidth > 600) newWidth = 600
-          else if (newWidth < 244) newWidth = 244
+          if (newWidth > this.sbMaxWidth) newWidth = this.sbMaxWidth
+          else if (newWidth < this.sbMinWidth) newWidth = this.sbMinWidth
           this.$store.commit('VIEW_SET_SIDEBAR_WIDTH', newWidth)
           return false
         }, 50)
@@ -151,8 +154,8 @@
   .pc-wrapper {
     flex-shrink: 0;
     display: flex;
-    min-width: 244px;
-    width: 244px;
+    min-width: var(--sb-min-width);
+    width: var(--sb-min-width);
   }
 
   .pc-elements {
