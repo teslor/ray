@@ -13,5 +13,8 @@
   --border-color-2: #f0f4fd;
   --bg-color-1: #f5f7fa;
 
+  --font-family-1: BlinkMacSystemFont, Segoe UI, Oxygen, Ubuntu, Cantarell, Helvetica Neue, sans-serif;
+  --font-family-2: BlinkMacSystemFont, Roboto, sans-serif;
+
   --sb-min-width: 244px;
 }

@@ -273,6 +273,11 @@
       font-weight: normal;
     }
 
+    & >>> .el-checkbox__label {
+      font-size: 12px;
+      padding-left: 8px;
+    }
+
     & .el-tag {
       font-size: 14px;
     }

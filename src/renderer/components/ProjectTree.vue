@@ -187,7 +187,7 @@
     flex: 1;
     overflow: auto;
     background: linear-gradient(180deg, #fefefe 0%, #fcfcfc 100%);
-    font-family: BlinkMacSystemFont, Roboto, sans-serif;
+    font-family: var(--font-family-2);
     font-size: 15px;
 
     & .fa-folder {

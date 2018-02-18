@@ -9,20 +9,20 @@
       @open="handleDialogOpen">
     <el-form class="ds-form" :model="editorSettings" label-width="180px">
       <el-form-item label="Main Font">
-        <el-select class="form-select" v-model="editorSettings.mainFont" placeholder="Select Font">
+        <el-select class="form-select" size="medium" v-model="editorSettings.mainFont" placeholder="Select Font">
           <el-option v-for="item in fonts" :key="item" :value="item"/>
         </el-select>
       </el-form-item>
       <el-form-item label="Base Font Size">
-        <el-select class="form-select" v-model="editorSettings.baseFontSize" placeholder="Select Font Size">
+        <el-select class="form-select" size="medium" v-model="editorSettings.baseFontSize" placeholder="Select Font Size">
           <el-option v-for="item in fontSizes" :key="item" :value="item"/>
         </el-select>
       </el-form-item>
       <el-form-item label="Font Color">
-        <el-color-picker v-model="editorSettings.fontColor"/>
+        <el-color-picker size="medium" v-model="editorSettings.fontColor"/>
       </el-form-item>
       <el-form-item label="Background Color">
-        <el-color-picker v-model="editorSettings.backgroundColor"/>
+        <el-color-picker size="medium" v-model="editorSettings.backgroundColor"/>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -30,8 +30,8 @@
         <el-button class="dialog-icon-button" type="primary" @click="handleShowInExplorerClick"><i class="fas fa-external-link-alt"></i></el-button>
       </div>
       <div>
-        <el-button type="primary" @click="handleResetClick">Reset</el-button>
-        <el-button type="primary" @click="handleApplyClick">Apply</el-button>
+        <el-button type="primary" size="medium" @click="handleResetClick">Reset</el-button>
+        <el-button type="primary" size="medium" @click="handleApplyClick">Apply</el-button>
       </div>
     </div>
   </el-dialog>
@@ -112,8 +112,8 @@
     }
 
     & .dialog-icon-button {
-      width: 50px;
-      height: 40px;
+      width: 46px;
+      height: 36px;
       padding: 0;
     }
   }

@@ -176,7 +176,8 @@
 
   .pc-title {
     text-align: center;
-    font-size: 18px;
+    font-family: var(--font-family-2);
+    font-size: 16px;
     height: 39px;
     line-height: 39px;
     background: linear-gradient(to bottom, var(--theme-color-1-l98) 0%, var(--theme-color-1-l96) 100%);

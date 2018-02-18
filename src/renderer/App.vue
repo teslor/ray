@@ -97,8 +97,8 @@
     padding: 0;
   }
 
-  body {
-    font-family: system-ui;
+  body, input, textarea, select, button {
+    font-family: var(--font-family-1);
   }
 
   /********** Additional global styles **********/
@@ -113,6 +113,26 @@
   }
 
   /********** Electron-UI styles ***********/
+
+  .el-button {
+    font-weight: 400;
+  }
+
+  .el-select-dropdown__item.selected {
+    font-weight: 500;
+  }
+
+  .el-form-item {
+    margin-bottom: 16px;
+  }
+
+  .el-form-item__label {
+    line-height: 36px;
+  }
+
+  .el-form-item__content {
+    line-height: 36px;
+  }
 
   .el-message__content {
     font-size: 15px;
