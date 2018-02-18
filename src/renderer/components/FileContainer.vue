@@ -136,13 +136,19 @@
       },
       saveCurrentFile () {
         if (this.currentFile.path) {
-          const currentEditor = this.getActiveEditorComponent().editor
-          this.$store.dispatch('saveFile', {
-            file: this.currentFile,
-            filePath: this.currentFile.path,
-            contents: currentEditor.root.innerHTML
+          setTimeout(function () {
+            const currentEditor = self.this.getActiveEditorComponent().editor
+            self.this.$store.dispatch('saveFile', {
+              file: self.this.currentFile,
+              filePath: self.this.currentFile.path,
+              contents: currentEditor.root.innerHTML
+            })
           })
-        } else ipc.send('save-file-dialog')
+        } else {
+          setTimeout(function () {
+            ipc.send('save-file-dialog')
+          })
+        }
       },
       closeFile (file) {
         if (file.flags.wasChanged) {
