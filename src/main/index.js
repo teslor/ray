@@ -1,6 +1,7 @@
 'use strict'
 
 import { app, BrowserWindow, ipcMain as ipc, dialog } from 'electron'
+import path from 'path'
 import Store from 'electron-store'
 
 /**
@@ -134,13 +135,19 @@ ipc.on('open-file-dialog', function (event, payload) {
   })
 })
 
-ipc.on('save-file-dialog', function (event) {
+ipc.on('save-file-dialog', function (event, payload) {
+  let defaultPath = app.getPath('home')
+  if (payload) {
+    if (payload.fileName) defaultPath = path.join(defaultPath, payload.fileName)
+    else if (payload.filePath) defaultPath = payload.filePath
+  }
+
   const options = {
     title: 'Save file',
     filters: [
       { name: 'HTML files', extensions: ['html', 'htm'] }
     ],
-    defaultPath: app.getPath('home')
+    defaultPath
   }
   dialog.showSaveDialog(mainWindow, options, function (filename) {
     event.sender.send('save-file', filename)

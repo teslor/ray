@@ -111,7 +111,8 @@
         }
       },
       saveFileAs () {
-        ipc.send('save-file-dialog')
+        if (this.currentFile.path) ipc.send('save-file-dialog', { filePath: this.currentFile.path })
+        else ipc.send('save-file-dialog', { fileName: this.currentFile.name })
       },
       addFileToProject () {
         this.$store.commit('BUS_ADD_MESSAGE', { section: 'project', message: { text: 'add-file', filePath: this.currentFile.path } })
