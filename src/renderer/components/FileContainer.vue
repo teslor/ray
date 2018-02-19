@@ -142,7 +142,11 @@
             filePath: this.currentFile.path,
             contents: currentEditor.root.innerHTML
           })
-        } else ipc.send('save-file-dialog', { fileName: this.currentFile.name })
+        } else {
+          setTimeout(() => { // prevent auto closing of Save dialog in macOS
+            ipc.send('save-file-dialog', { fileName: this.currentFile.name })
+          })
+        }
       },
       closeFile (file) {
         if (file.flags.wasChanged) {
