@@ -174,7 +174,7 @@
 
   .pt-action-bar {
     background-color: var(--bg-color-1);
-    padding: 2px 3px 3px 3px;
+    padding: 2px 3px 4px 3px;
   }
 
   .pt-action-button {
