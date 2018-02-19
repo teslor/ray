@@ -1,12 +1,19 @@
 {
   "name": "ray",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": {
     "name": "Pavel D.",
     "email": "pvd367@gmail.com"
   },
   "description": "Desktop HTML-powered text editor with advanced features",
-  "keywords": ["html", "text", "editor", "viewer", "note", "wysiwyg"],
+  "keywords": [
+    "html",
+    "text",
+    "editor",
+    "viewer",
+    "note",
+    "wysiwyg"
+  ],
   "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
@@ -112,5 +119,8 @@
     "webpack": "^3.10.0",
     "webpack-dev-server": "^2.11.1",
     "webpack-hot-middleware": "^2.21.0"
+  },
+  "optionalDependencies": {
+    "7zip-bin-mac": "^1.0.1"
   }
 }
