@@ -7,15 +7,17 @@ Ray is a desktop HTML-powered text editor with advanced features.
 <br>
 Create, style, organize your personal notes!
 </p>
-<img src="https://img.shields.io/badge/version-0.2.0%20Beta-orange.svg" alt="v0.2.0 Beta">
+<img src="https://img.shields.io/badge/version-0.2.1%20Beta-orange.svg" alt="v0.2.1 Beta">
 
 ![Main Screenshot](/static/screenshots/win.png)
 
 ### :surfer: Platforms
 Ray is based on Electron platform and can be run on Windows, macOS and Linux. 
-At this moment you can download distributive for Windows (tested on Windows 10), macOS and Linux releases will be added later.
+At this moment you can download distributives for Windows (tested on Windows 10) and macOS (tested on macOS Sierra).
 
-<a href="https://github.com/teslor/ray/releases/download/v0.2.0/Ray-0.2.0-x64.exe">Download v0.2.0 for Windows x64</a>
+<a href="https://github.com/teslor/ray/releases/download/v0.2.1/Ray-0.2.1-x64.exe">Download v0.2.1 for Windows x64</a>
+
+<a href="https://github.com/teslor/ray/releases/download/v0.2.1/Ray-0.2.1.dmg">Download v0.2.1 for macOS</a>
 
 ### :trophy: Features
 * Full HTML support.
