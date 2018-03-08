@@ -1,7 +1,11 @@
-# 0.2.1 (upcoming)
+# 0.2.1
 
-- Fixed failing build due to package.json looking for icon.icns instead of icons.icns
-- Changed 'MacOS' to 'macOS' in README
+- Add first macOS release!
+- Improve file saving dialog (keep names/paths)
+- Improve styles (fonts, form elements)
+- Add sidebar animation
+- Fix Save dialog in macOS #4
+- Fix failing build for macOS
 
 
 # 0.2.0
