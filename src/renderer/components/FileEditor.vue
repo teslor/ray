@@ -29,7 +29,9 @@
 <script>
   import { mapState, mapGetters } from 'vuex'
   import debounce from 'lodash/debounce'
+  import isEqual from 'lodash/isEqual'
   import Quill from 'quill'
+  import Delta from 'quill-delta'
   import MagicUrl from 'quill-magic-url'
   import findAndReplaceDOMText from 'findandreplacedomtext'
   Quill.register('modules/magicUrl', MagicUrl)
@@ -161,13 +163,26 @@
       // Add shortcuts for headers
       for (let i = 1; i < 6; i += 1) {
         const key = String(i)
-        this.editor.keyboard.addBinding({ key, ctrlKey: true }, function (range) {
-          this.quill.formatLine(range, 'header', key)
+        this.editor.keyboard.addBinding({ key, ctrlKey: true }, range => {
+          this.editor.formatLine(range, 'header', key)
         })
       }
       // Add shortcut for format removing
-      this.editor.keyboard.addBinding({ key: 'E', ctrlKey: true }, function (range) {
-        this.quill.removeFormat(range)
+      this.editor.keyboard.addBinding({ key: 'E', ctrlKey: true }, range => {
+        this.editor.removeFormat(range)
+      })
+      // Add shortcuts for text transformations
+      this.editor.keyboard.addBinding({ key: '7', ctrlKey: true }, range => {
+        this.transformText('u', range)
+      })
+      this.editor.keyboard.addBinding({ key: '7', ctrlKey: true, shiftKey: true }, range => {
+        this.transformText('l', range)
+      })
+      this.editor.keyboard.addBinding({ key: '8', ctrlKey: true }, range => {
+        this.transformText('s', range)
+      })
+      this.editor.keyboard.addBinding({ key: '8', ctrlKey: true, shiftKey: true }, range => {
+        this.transformText('t', range)
       })
       // TODO: implement more accurate file change detection
       this.editor.on('text-change', (delta, oldDelta, source) => {
@@ -185,6 +200,61 @@
       loadContents () {
         this.editor.clipboard.dangerouslyPasteHTML(this.file.data)
         this.editor.history.clear()
+      },
+
+      transformText (t, range) {
+        let text = this.editor.getText(range.index, range.length)
+
+        if (t === 'u') {
+          text = text.toUpperCase()
+        } else if (t === 'l') {
+          text = text.toLowerCase()
+        } else if (t === 's') {
+          text = text.toLowerCase()
+          const separatorList = ['. ', '? ', '! ', '.\n', '?\n', '!\n', '\n']
+          separatorList.forEach(separator => {
+            text = text.split(separator).map(sentence => capitalize(sentence)).join(separator)
+          })
+        } else if (t === 't') {
+          text = text.toLowerCase()
+          text = text.split(' ').map(word => capitalize(word)).join(' ')
+          text = text.split('\n').map(word => capitalize(word)).join('\n')
+        }
+
+        // Create format groups to keep all existing formats
+        let insertions = {
+          text: [],
+          attr: []
+        }
+        let len, format, prevFormat
+        for (let i = range.index, j = 0; i < range.index + range.length; i += 1, j += 1) {
+          len = insertions.attr.length
+          format = this.editor.getFormat(i, 1) // get current character format
+
+          if (len > 0) {
+            prevFormat = insertions.attr[len - 1]
+            if (isEqual(prevFormat, format)) { // format is still the same
+              insertions.text[len - 1] = insertions.text[len - 1] + text[j]
+            } else {
+              insertions.text.push(text[j])
+              insertions.attr.push(format)
+            }
+          } else {
+            insertions.text.push(text[j])
+            insertions.attr.push(format)
+          }
+        }
+
+        const delta = new Delta()
+        delta.retain(range.index).delete(range.length)
+        for (let i = 0; i < insertions.attr.length; i += 1) {
+          delta.insert(insertions.text[i], insertions.attr[i])
+        }
+        this.editor.updateContents(delta)
+
+        function capitalize (s) {
+          return s.charAt(0).toUpperCase() + s.slice(1)
+        }
       },
 
       // ********** Search/replace methods **********

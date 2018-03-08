@@ -115,21 +115,25 @@
             { keys: 'Ctrl + S', text: 'Save File / Save File As', icon: 'far fa-clone fa-sm' },
             { keys: 'Ctrl + W', text: 'Close File' },
             { keys: 'Ctrl + F', text: 'Find Text in File', icon: 'fas fa-search fa-sm' },
-            { keys: 'Ctrl + Shift + E', text: 'Show File in Explorer', icon: 'fas fa-external-link-alt' }
+            { keys: 'Ctrl + Shift + E', text: 'Show File in Explorer/Finder', icon: 'fas fa-external-link-alt' }
           ]
         },
         {
           section: 'Editor',
           items: [
-            { keys: 'Ctrl + Z', text: 'Undo' },
-            { keys: 'Ctrl + Shift + Z', text: 'Redo' },
+            { keys: 'Ctrl + 1..5', text: 'Set Header Level 1..5' },
+            { keys: 'Ctrl + 7', text: 'Change Case: UPPERCASE' },
+            { keys: 'Ctrl + Shift + 7', text: 'Change Case: lowercase' },
+            { keys: 'Ctrl + 8', text: 'Change Case: Sentence case' },
+            { keys: 'Ctrl + Shift + 8', text: 'Change Case: Title Case' },
             { keys: 'Ctrl + A', text: 'Select All' },
-            { keys: 'Ctrl + 1..5', text: 'Header Level 1..5' },
             { keys: 'Ctrl + B', text: 'Bold Text' },
             { keys: 'Ctrl + I', text: 'Italic Text' },
             { keys: 'Ctrl + U', text: 'Underlined Text' },
-            { keys: 'Ctrl + K', text: 'Hyperlink' },
-            { keys: 'Ctrl + E', text: 'Remove Format' }
+            { keys: 'Ctrl + K', text: 'Set Hyperlink' },
+            { keys: 'Ctrl + E', text: 'Remove Format' },
+            { keys: 'Ctrl + Z', text: 'Undo' },
+            { keys: 'Ctrl + Shift + Z', text: 'Redo' }
           ]
         }
       ]
