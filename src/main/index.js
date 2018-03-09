@@ -12,6 +12,8 @@ if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = true
+
 // Open app config and keep it in globals
 global.config = null
 try {
@@ -31,7 +33,9 @@ function createWindow () {
     height: 800,
     minWidth: 800,
     minHeight: 600
-    // webPreferences: { devTools: false }
+    // webPreferences: {
+    //   devTools: false
+    // }
   }
 
   const appConfig = global.config
