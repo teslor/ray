@@ -9,11 +9,16 @@
         @tab-click="handleTabClick">
       <el-tab-pane
           v-for="file in activeFiles"
-          :label="file.name"
           :name="file.id"
           :key="file.id"
           :data-file-id="file.id"
           closable>
+        <span slot="label">
+          {{ file.name }}
+          <transition name="el-zoom-in-center">
+            <span v-if="file.flags.wasChanged" class="fc-changed"></span>
+          </transition>
+        </span>
         <file-editor
             v-if="file.dataType"
             ref="ref_editors"
@@ -194,6 +199,13 @@
     border: none;
     box-shadow: none;
 
+    & .el-tabs__header {
+      & .el-tabs__item {
+        position: relative;
+        border-right-color: var(--border-color-1);
+      }
+    }
+
     & .el-icon-plus {
       transform: none;
     }
@@ -229,6 +241,20 @@
 
     & .el-tabs__item.is-active, & .el-tabs__item:hover {
       color: var(--theme-color-2) !important;
+
+      & .fc-changed {
+        background-color: var(--theme-color-2);
+      }
     }
+  }
+
+  .fc-changed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    opacity: 0.4;
+    background-color: #909399;
   }
 </style>

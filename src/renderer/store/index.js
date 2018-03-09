@@ -175,6 +175,10 @@ const mutations = {
   [types.FILE_SET_FLAGS] (state, { fileId, flags }) {
     const i = state.activeFiles.findIndex(file => file.id === fileId)
     Object.keys(flags).forEach(flag => {
+      if (flag === 'savedCounter') {
+        state.activeFiles[i].flags[flag] += 1
+        return
+      }
       state.activeFiles[i].flags[flag] = flags[flag]
     })
   },
@@ -339,7 +343,8 @@ const actions = {
       path: '',
       searchMode: false,
       flags: {
-        wasChanged: false
+        wasChanged: false,
+        savedCounter: 0
       },
       dataType: 'b'
     })
@@ -379,7 +384,8 @@ const actions = {
         path: filePath,
         searchMode: false,
         flags: {
-          wasChanged: false
+          wasChanged: false,
+          savedCounter: 0
         },
         data: dataType === 'b' ? data : null,
         dataType
@@ -414,7 +420,7 @@ const actions = {
           commit(types.FILE_SET_NAME, { fileId: file.id, fileName: newFileName })
         }
       }
-      commit(types.FILE_SET_FLAGS, { fileId: file.id, flags: { wasChanged: false } })
+      commit(types.FILE_SET_FLAGS, { fileId: file.id, flags: { wasChanged: false, savedCounter: 1 } })
     } catch (e) {
       commit('BUS_ADD_MESSAGE', {
         section: 'notification', message: { text: `Unable to save file "${filePath}"`, type: 'error' }
