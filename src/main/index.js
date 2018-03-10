@@ -10,9 +10,9 @@ import Store from 'electron-store'
  */
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
+} else {
+  process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = true
 }
-
-process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = true
 
 // Open app config and keep it in globals
 global.config = null
@@ -41,11 +41,7 @@ function createWindow () {
   const appConfig = global.config
   if (appConfig) {
     try {
-      const w = appConfig.get('view.window') || {}
-      if (w.width) mainWindowOptions.width = w.width
-      if (w.height) mainWindowOptions.height = w.height
-      if (w.x) mainWindowOptions.x = w.x
-      if (w.y) mainWindowOptions.y = w.y
+      Object.assign(mainWindowOptions, appConfig.get('view.window'))
     } catch (e) {}
   } else {
     mainWindowOptions.center = true

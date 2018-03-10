@@ -286,17 +286,23 @@ const actions = {
       appConfig.set('recentFiles', recentFilesPaths)
       appConfig.set('currentProject', state.currentProject.name ? state.currentProject.name : '')
       appConfig.set('projects', state.projects)
+
+      let windowSettings = Object.assign({}, appConfig.get('view.window'))
+      if (remote.getCurrentWindow().isFullScreen()) { // do not overwrite position/size if fullscreen
+        windowSettings.fullscreen = true
+      } else {
+        windowSettings.width = window.outerWidth
+        windowSettings.height = window.outerHeight
+        windowSettings.x = window.screenX
+        windowSettings.y = window.screenY
+        windowSettings.fullscreen = false
+      }
       appConfig.set('view', {
         sidebar: {
           visible: state.view.sidebar.visible,
           width: state.view.sidebar.width
         },
-        window: {
-          width: window.outerWidth,
-          height: window.outerHeight,
-          x: window.screenX,
-          y: window.screenY
-        }
+        window: windowSettings
       })
     } catch (e) {
       commit('BUS_ADD_MESSAGE', {

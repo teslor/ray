@@ -91,7 +91,7 @@
           items: [
             { keys: 'F1', text: 'Show Help', icon: 'fas fa-question fa-sm' },
             { keys: 'F9', text: 'Show Settings', icon: 'fas fa-cog fa-sm' },
-            { keys: 'F11', text: 'Toggle Fullscreen Mode' },
+            { keys: process.platform === 'darwin' ? 'Ctrl + Cmd + F' : 'F11', text: 'Toggle Fullscreen Mode' },
             { keys: 'Esc', text: 'Close Dialog' }
           ]
         },

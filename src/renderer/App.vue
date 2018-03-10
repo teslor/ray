@@ -40,8 +40,8 @@
     mounted () {
       // ********** Global event listeners **********
 
-      // Shortcut handlers
-      this.$Mousetrap.bindGlobal(['f11'], () => {
+      const fsShortcut = process.platform === 'darwin' ? 'ctrl+command+f' : 'f11'
+      this.$Mousetrap.bindGlobal([fsShortcut], () => {
         this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen())
       })
 
