@@ -1,8 +1,13 @@
 const defaultValues = {
-  mainFont: 'Roboto',
-  baseFontSize: '18 px',
-  fontColor: '#070707',
-  backgroundColor: '#fafdff'
+  editor: {
+    mainFont: 'Roboto',
+    baseFontSize: '18 px',
+    fontColor: '#070707',
+    backgroundColor: '#fafdff'
+  },
+  files: {
+    contentWidth: 'Max'
+  }
 }
 
 const renderHtml = function (source, options) {

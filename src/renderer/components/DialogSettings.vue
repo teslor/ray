@@ -7,24 +7,39 @@
       :before-close="hideDialog"
       width="450px"
       @open="handleDialogOpen">
-    <el-form class="ds-form" :model="editorSettings" label-width="180px">
-      <el-form-item label="Main Font">
-        <el-select class="form-select" size="medium" v-model="editorSettings.mainFont" placeholder="Select Font">
-          <el-option v-for="item in fonts" :key="item" :value="item"/>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="Base Font Size">
-        <el-select class="form-select" size="medium" v-model="editorSettings.baseFontSize" placeholder="Select Font Size">
-          <el-option v-for="item in fontSizes" :key="item" :value="item"/>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="Font Color">
-        <el-color-picker size="medium" v-model="editorSettings.fontColor"/>
-      </el-form-item>
-      <el-form-item label="Background Color">
-        <el-color-picker size="medium" v-model="editorSettings.backgroundColor"/>
-      </el-form-item>
-    </el-form>
+
+    <el-tabs v-model="activeTab">
+      <el-tab-pane label="Editor" name="editor">
+        <el-form class="ds-form" :model="settings.editor" label-width="180px">
+          <el-form-item label="Main Font">
+            <el-select size="medium" v-model="settings.editor.mainFont" placeholder="Select">
+              <el-option v-for="item in fonts" :key="item" :value="item"/>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="Base Font Size">
+            <el-select size="medium" v-model="settings.editor.baseFontSize" placeholder="Select">
+              <el-option v-for="item in fontSizes" :key="item" :value="item"/>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="Font Color">
+            <el-color-picker size="medium" v-model="settings.editor.fontColor"/>
+          </el-form-item>
+          <el-form-item label="Background Color">
+            <el-color-picker size="medium" v-model="settings.editor.backgroundColor"/>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
+      <el-tab-pane label="Files" name="files">
+        <el-form class="ds-form" :model="settings.files" label-width="180px">
+          <el-form-item label="Content Width">
+            <el-select size="medium" v-model="settings.files.contentWidth" placeholder="Select">
+              <el-option v-for="item in contentWidths" :key="item" :value="item"/>
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
+    </el-tabs>
+
     <div slot="footer" class="dialog-footer">
       <div>
         <el-button class="dialog-icon-button" type="primary" @click="handleShowInExplorerClick"><i class="fas fa-external-link-alt"></i></el-button>
@@ -46,13 +61,22 @@
 
     data () {
       return {
+        activeTab: 'editor',
+
         fonts: ['Auto', 'Helvetica', 'Roboto', 'Verdana'],
         fontSizes: ['14 px', '16 px', '18 px', '20 px', '22 px', '24 px'],
-        editorSettings: {
-          mainFont: '',
-          baseFontSize: '',
-          fontColor: '',
-          backgroundColor: ''
+        contentWidths: ['Max', '800 px', '1000 px', '1200 px', '1600 px'],
+
+        settings: {
+          editor: {
+            mainFont: '',
+            baseFontSize: '',
+            fontColor: '',
+            backgroundColor: ''
+          },
+          files: {
+            contentWidth: ''
+          }
         }
       }
     },
@@ -68,26 +92,28 @@
         this.$store.commit('VIEW_TOGGLE_DIALOG_SETTINGS', false)
       },
       handleDialogOpen () {
-        Object.keys(this.editorSettings).forEach(key => {
-          this.editorSettings[key] = this.$store.state.settings.editor[key]
+        Object.keys(this.settings).forEach(section => {
+          Object.keys(this.settings[section]).forEach(key => {
+            this.settings[section][key] = this.$store.state.settings[section][key]
+          })
         })
       },
       handleShowInExplorerClick () {
         const appConfig = this.$electron.remote.getGlobal('config')
-        if (!appConfig) return
-        this.$electron.shell.showItemInFolder(appConfig.path)
+        if (appConfig) this.$electron.shell.showItemInFolder(appConfig.path)
       },
       handleApplyClick () {
         this.$store.dispatch('updateSettings', {
           settings: {
-            editor: this.editorSettings
+            editor: this.settings.editor,
+            files: this.settings.files
           }
         })
         this.hideDialog()
       },
       handleResetClick () {
-        Object.keys(this.editorSettings).forEach(key => {
-          if (defaultValues[key]) this.editorSettings[key] = defaultValues[key]
+        Object.keys(this.settings[this.activeTab]).forEach(key => {
+          if (defaultValues[this.activeTab][key]) this.settings[this.activeTab][key] = defaultValues[this.activeTab][key]
         })
       }
     }
@@ -100,7 +126,7 @@
       display: flex;
     }
 
-    & .form-select {
+    & .el-select, & .el-input-number {
       width: 120px;
     }
   }
@@ -115,6 +141,10 @@
       width: 46px;
       height: 36px;
       padding: 0;
+    }
+
+    & .el-tabs__content {
+      min-height: 210px;
     }
   }
 </style>

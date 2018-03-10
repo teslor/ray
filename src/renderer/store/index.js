@@ -34,12 +34,8 @@ const state = {
   currentProject: {},
   projects: [],
   settings: {
-    editor: {
-      mainFont: defaultValues.mainFont,
-      baseFontSize: defaultValues.baseFontSize,
-      fontColor: defaultValues.fontColor,
-      backgroundColor: defaultValues.backgroundColor
-    }
+    editor: Object.assign({}, defaultValues.editor),
+    files: Object.assign({}, defaultValues.files)
   },
   view: {
     sidebar: {
@@ -70,6 +66,12 @@ const getters = {
     style += `font-size:${parseInt(s.baseFontSize)}px;`
     style += `color:${s.fontColor};`
     style += `background-color:${s.backgroundColor};`
+    return style
+  },
+  filesStyle: state => {
+    const s = state.settings.files
+    let style = ''
+    if (s.contentWidth !== 'Max') style += `max-width:${parseInt(s.contentWidth)}px;margin:0 auto;`
     return style
   },
   getProjectByName: state => name => {
@@ -372,8 +374,14 @@ const actions = {
     // Open file
     try {
       let data = fs.readFileSync(filePath, 'utf8')
-      const b1 = data.indexOf('<body')
-      const b2 = data.lastIndexOf('</body>')
+      let b1, b2
+      b1 = data.indexOf('<body class="ray') // file is created in version <= 0.2.1
+      if (b1 === -1) {
+        b1 = data.indexOf('<main class="ray')
+        b2 = data.lastIndexOf('</main>')
+      } else {
+        b2 = data.lastIndexOf('</body>')
+      }
 
       let dataType = ''
       if (b1 !== -1 && b2 !== -1) {
@@ -410,11 +418,13 @@ const actions = {
     if (!filePath.endsWith('.html') && !filePath.endsWith('.htm')) filePath += '.html'
 
     const newFileName = path.basename(filePath, path.extname(filePath))
+    const editorStyle = getters.editorStyle
+    const filesStyle = getters.filesStyle
     const outputHtml = renderHtml(htmlTemplates.base, {
       title: newFileName,
       styleBase: cssTemplates.base,
       styleMain: cssTemplates.main,
-      styleExtra: `body{${getters.editorStyle}}`,
+      styleExtra: `body{${editorStyle}}` + (filesStyle ? `main{${filesStyle}}` : ''),
       contents
     })
 

@@ -125,6 +125,10 @@
     font-weight: 400;
   }
 
+  .el-dialog__body {
+    padding: 20px;
+  }
+
   .el-select-dropdown__item.selected {
     font-weight: 500;
   }

@@ -11,7 +11,6 @@
           v-for="file in activeFiles"
           :name="file.id"
           :key="file.id"
-          :data-file-id="file.id"
           closable>
         <span slot="label">
           {{ file.name }}
@@ -29,7 +28,6 @@
             v-else
             :file="file"
             :active="file.id === currentFile.id"/>
-        <!--<file-viewer></file-viewer>-->
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -171,8 +169,8 @@
       // ********** Handlers **********
 
       handleTabClick (tab) {
-        const fileId = tab.$el.getAttribute('data-file-id')
-        if (fileId !== this.currentFile.id) this.$store.commit('FILE_SET_CURRENT', tab.$el.getAttribute('data-file-id'))
+        const fileId = tab.name
+        if (fileId !== this.currentFile.id) this.$store.commit('FILE_SET_CURRENT', fileId)
       },
       handleTabsEdit (tabName, action) {
         if (action === 'add') {
