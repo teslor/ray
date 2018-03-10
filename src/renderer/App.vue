@@ -45,6 +45,15 @@
         this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen())
       })
 
+      this.$Mousetrap.bindGlobal(['command+q'], (event) => {
+        event.preventDefault()
+        this.confirmQuit(true)
+      })
+
+      ipc.on('request-close-window', () => {
+        this.confirmQuit()
+      })
+
       // Prevent dropped file from opening in window
       document.addEventListener('dragover', function (event) {
         event.preventDefault()
@@ -54,13 +63,15 @@
         event.preventDefault()
         return false
       }, false)
+    },
 
-      ipc.on('request-close-app', () => {
+    methods: {
+      confirmQuit (forceQuit) {
         const i = this.$store.state.activeFiles.findIndex(file => file.flags.wasChanged)
 
         // No changes in files
         if (i === -1) {
-          this.closeApp()
+          this.quitApp(forceQuit)
           return
         }
 
@@ -70,16 +81,12 @@
           dangerouslyUseHTMLString: true,
           type: 'warning'
         }).then(() => {
-          this.closeApp()
+          this.quitApp(forceQuit)
         }).catch(() => {})
-      })
-    },
-
-    methods: {
-      async closeApp () {
+      },
+      async quitApp (forceQuit) {
         await this.$store.dispatch('saveAppConfig')
-        this.mainWindow.allowClose = true
-        this.mainWindow.close()
+        ipc.send(forceQuit ? 'quit-app' : 'close-window')
       }
     }
   }

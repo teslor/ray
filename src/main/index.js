@@ -62,9 +62,10 @@ function createWindow () {
 
   mainWindow.allowClose = false
   mainWindow.on('close', (event) => {
-    if (mainWindow.allowClose) return
-    event.preventDefault()
-    event.sender.send('request-close-app')
+    if (!mainWindow.allowClose) {
+      event.preventDefault()
+      event.sender.send('request-close-window')
+    }
   })
 
   mainWindow.on('closed', () => {
@@ -111,6 +112,16 @@ app.on('ready', () => {
  */
 
 // ********** Handlers **********
+
+ipc.on('close-window', function (event) {
+  mainWindow.allowClose = true
+  mainWindow.close() // will quit the app in Windows
+})
+
+ipc.on('quit-app', function (event) {
+  mainWindow.allowClose = true
+  app.quit()
+})
 
 ipc.on('save-project-dialog', function (event) {
   const options = {
