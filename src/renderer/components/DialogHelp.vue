@@ -7,14 +7,14 @@
       top="6vh"
       width="90%">
     <el-tabs tab-position="left">
-      <el-tab-pane label="Guide">
+      <el-tab-pane label="Guide" class="dh-guide">
         <h2>Overview</h2>
-        <p>Ray is nice and minimalist WYSIWYG* HTML editor. It's intended to create and organize personal notes.</p>
+        <p>Ray is nice and minimalist WYSIWYG* text editor. It's intended to create and organize personal notes.</p>
         <p>The key features are:</p>
         <ul>
           <li>Using HTML format. This means advanced styling options and ability to open created files in any programs that support HTML (e.g. browsers).</li>
-          <li>Neat interface helps to do things more effectively.</li>
           <li>File organizing capabilities by using projects (see below).</li>
+          <li>Neat interface helps to do things more effectively.</li>
           <li>Adjusting styles of the editor and created files.</li>
         </ul>
         <p>* - What You See Is What You Get</p>
@@ -37,7 +37,7 @@
         <p>A project is represented by treelike structure of folders and files, exactly the same as you see in file manager.
           However project folders are virtual and not related to real folders in the file system.
           So you can easily rearrange project structure and include files from different locations (or different projects can include the same file). And also quickly switch between all your projects.</p>
-        <p>Projects are saved automatically before quitting the app or you can save all changes manually by using the corresponding button/shortcut.</p>
+        <p>Projects are saved automatically before quitting the app or you can save all changes manually by using appropriate button/shortcut.</p>
         <p class="dh-tips">Tips:</p>
         <ul>
           <li>You can drag and drop folders/files inside project tree view.</li>
@@ -46,27 +46,40 @@
         </ul>
 
         <h2>Settings</h2>
-        <p>In the Setting dialog you can set some style options related to the editor.</p>
-        <p><strong>More adjustable parameters will be added soon!</strong></p>
+        <p>In the Settings dialog you can set some options related to the editor, files etc.</p>
+        <p><strong>New adjustable parameters are constantly added!</strong></p>
 
         <h2>Configuration File</h2>
         <p>All program settings are saved in the configuration file config.json located in the application folder.</p>
-        <p>You can see it in file explorer by clicking the button in the Settings dialog.</p>
+        <p>You can see it in Explorer/Finder by clicking the button in the Settings dialog.</p>
         <p>It's highly recommended to backup this file from time to time (especially if you have many projects).</p>
-        <br>
-        <p><strong>Thank you for using Ray!</strong></p>
-        <p><strong>Version: 0.2.1</strong></p>
       </el-tab-pane>
 
-      <el-tab-pane label="Shortcuts">
+      <el-tab-pane label="Shortcuts" class="dh-shortcuts">
         <template v-for="sc in shortcuts">
           <h2>{{ sc.section }}</h2>
-          <div class="dh-sc-row" v-for="item in sc.items">
-            <div class="col1"><el-tag type="success">{{ item.keys }}</el-tag></div>
-            <div class="col2">{{ item.text }}</div>
-            <div class="col3" v-if="item.icon"><i :class="item.icon"></i></div>
+          <div class="dh-sc-section">
+            <div class="dh-sc-row" v-for="item in sc.items">
+              <div class="col1"><el-tag type="success">{{ item.keys }}</el-tag></div>
+              <div class="col2">{{ item.text }}</div>
+              <div class="col3" v-if="item.icon"><i :class="item.icon"></i></div>
+            </div>
           </div>
         </template>
+      </el-tab-pane>
+
+      <el-tab-pane label="About" class="dh-about">
+        <h2>Ray 0.3.0</h2>
+        <p>Project Link:</p>
+        <p><a class="dh-link" href="" @click.prevent="openLink('https://github.com/teslor/ray')">
+          https://github.com/teslor/ray
+        </a></p>
+        <p style="margin-top:15px">Releases:</p>
+        <p><a class="dh-link" href="" @click.prevent="openLink('https://github.com/teslor/ray/releases')">
+          https://github.com/teslor/ray/releases
+        </a></p>
+        <br>
+        <p>Thank you for using Ray!</p>
       </el-tab-pane>
     </el-tabs>
   </el-dialog>
@@ -110,9 +123,10 @@
         {
           section: 'Files',
           items: [
-            { keys: 'Ctrl + N', text: 'Create file (Add New Tab)', icon: 'fas fa-plus fa-sm' },
+            { keys: 'Ctrl + N', text: 'Create File (Add New Tab)', icon: 'fas fa-plus fa-sm' },
             { keys: 'Ctrl + O', text: 'Open File(s)', icon: 'far fa-folder-open fa-sm' },
             { keys: 'Ctrl + S', text: 'Save File / Save File As', icon: 'far fa-clone fa-sm' },
+            { keys: 'Ctrl + Alt + Shift + S', text: 'Save All Files (that have changes)' },
             { keys: 'Ctrl + W', text: 'Close File' },
             { keys: 'Ctrl + F', text: 'Find Text in File', icon: 'fas fa-search fa-sm' },
             { keys: 'Ctrl + Shift + E', text: 'Show File in Explorer/Finder', icon: 'fas fa-external-link-alt' }
@@ -142,6 +156,9 @@
     methods: {
       hideDialog () {
         this.$store.commit('VIEW_TOGGLE_DIALOG_HELP', false)
+      },
+      openLink (link) {
+        this.$electron.shell.openExternal(link)
       }
     }
   }
@@ -156,6 +173,7 @@
       display: flex;
       flex-direction: column;
       margin-bottom: 0;
+      max-width: 1200px;
     }
 
     & .el-dialog__header {
@@ -179,7 +197,7 @@
       height: 100%;
       overflow: auto;
       font-size: 16px;
-      line-height: 2;
+      line-height: 1.8;
       padding-right: 10px;
 
       & h2 {
@@ -190,7 +208,7 @@
       }
 
       & li {
-        margin-left: 40px;
+        margin-left: 50px;
       }
 
       & p + h2, & ul + h2 {
@@ -198,14 +216,32 @@
       }
     }
 
+    & .el-tab-pane.dh-about {
+      font-size: 18px;
+      font-weight: 500;
+
+
+    }
+
     & .el-tabs__item {
       font-size: 18px;
+    }
+  }
+
+  .dh-guide, .dh-about {
+    & h2 {
+      margin-bottom: 10px;
     }
   }
 
   .dh-tips {
     font-weight: bold;
     color: var(--theme-color-2);
+  }
+
+  .dh-sc-section {
+    padding: 5px 0;
+    background-color: var(--bg-color-1);
   }
 
   .dh-sc-row {
@@ -229,5 +265,9 @@
       color: #777;
       width: 25%;
     }
+  }
+
+  .dh-link {
+    color: var(--theme-color-2)
   }
 </style>

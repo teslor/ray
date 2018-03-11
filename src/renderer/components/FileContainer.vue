@@ -46,7 +46,8 @@
     data () {
       return {
         tabsElement: null,
-        tabsHeaderElement: null
+        tabsHeaderElement: null,
+        autosaveTimer: null
       }
     },
 
@@ -54,7 +55,8 @@
       ...mapState({
         currentFile: state => state.currentFile,
         activeFiles: state => state.activeFiles,
-        busMessageFile: state => state.bus.file
+        busMessageFile: state => state.bus.file,
+        filesSettings: state => state.settings.files
       }),
       ...mapGetters([
         'allowShortcuts'
@@ -70,7 +72,18 @@
             break
           case 'show-in-folder':
             this.$electron.shell.showItemInFolder(this.currentFile.path)
+            break
+          case 'save-all':
+            this.saveAllFiles()
         }
+      },
+
+      'filesSettings.autosave': {
+        handler: function (autosave) {
+          if (this.autosaveTimer) clearInterval(this.autosaveTimer)
+          if (autosave > 0) this.autosaveTimer = setInterval(() => { this.saveAllFiles() }, autosave * 60000)
+        },
+        immediate: true
       }
     },
 
@@ -122,6 +135,9 @@
       this.$Mousetrap.bindGlobal(['command+s', 'ctrl+s'], () => {
         if (this.allowShortcuts && this.currentFile.dataType) this.saveCurrentFile()
       })
+      this.$Mousetrap.bindGlobal(['command+alt+shift+s', 'ctrl+alt+shift+s'], () => {
+        if (this.allowShortcuts) this.saveAllFiles()
+      })
       this.$Mousetrap.bindGlobal(['command+w', 'ctrl+w'], () => {
         if (this.allowShortcuts) this.closeFile(this.currentFile)
       })
@@ -150,6 +166,16 @@
             ipc.send('save-file-dialog', { fileName: this.currentFile.name })
           })
         }
+      },
+      saveAllFiles () {
+        this.$refs.ref_editors.forEach(async fe => {
+          if (!fe.file.path || !fe.file.flags.wasChanged) return // file should be already saved and have changes
+          await this.$store.dispatch('saveFile', {
+            file: fe.file,
+            filePath: fe.file.path,
+            contents: fe.editor.root.innerHTML
+          })
+        })
       },
       closeFile (file) {
         if (file.flags.wasChanged) {
@@ -188,7 +214,6 @@
 
   .fc-wrapper {
     flex: 1;
-    user-select: none;
     min-width: 1px; /* prevent .el-tabs__header growth */
   }
 
@@ -253,6 +278,6 @@
     right: 0;
     height: 2px;
     opacity: 0.4;
-    background-color: #909399;
+    background-color: #bbb;
   }
 </style>

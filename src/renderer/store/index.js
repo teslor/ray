@@ -22,7 +22,7 @@ let newFileId = 1
 const state = {
   bus: {
     project: null, // possible actions: create, rename, delete, save-all;
-    file: null, // possible actions: save-current, show-in-folder;
+    file: null, // possible actions: save-current, save-all, show-in-folder;
     notification: null
   },
   newFileName: 'File-1',
@@ -63,7 +63,7 @@ const getters = {
     const s = state.settings.editor
     let style = ''
     style += `font-family:${s.mainFont === 'Auto' ? fontFamily : s.mainFont + ',' + fontFamily};`
-    style += `font-size:${parseInt(s.baseFontSize)}px;`
+    style += `font-size:${s.baseFontSize}px;`
     style += `color:${s.fontColor};`
     style += `background-color:${s.backgroundColor};`
     return style
@@ -71,7 +71,7 @@ const getters = {
   filesStyle: state => {
     const s = state.settings.files
     let style = ''
-    if (s.contentWidth !== 'Max') style += `max-width:${parseInt(s.contentWidth)}px;margin:0 auto;`
+    if (s.contentWidth > 0) style += `max-width:${s.contentWidth}px;margin:0 auto;`
     return style
   },
   getProjectByName: state => name => {
@@ -188,7 +188,9 @@ const mutations = {
   [types.SETTINGS_SET] (state, settings) {
     Object.keys(settings).forEach(section => {
       Object.keys(settings[section]).forEach(key => {
-        state.settings[section][key] = settings[section][key]
+        // baseFontSize is string in version <= 0.2.1 (remove later)
+        if (key === 'baseFontSize') state.settings[section][key] = parseInt(settings[section][key])
+        else state.settings[section][key] = settings[section][key]
       })
     })
   },
@@ -375,7 +377,7 @@ const actions = {
     try {
       let data = fs.readFileSync(filePath, 'utf8')
       let b1, b2
-      b1 = data.indexOf('<body class="ray') // file is created in version <= 0.2.1
+      b1 = data.indexOf('<body class="ray') // file is created in version <= 0.2.1 (remove later)
       if (b1 === -1) {
         b1 = data.indexOf('<main class="ray')
         b2 = data.lastIndexOf('</main>')

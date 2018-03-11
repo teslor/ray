@@ -1,12 +1,13 @@
 const defaultValues = {
   editor: {
     mainFont: 'Roboto',
-    baseFontSize: '18 px',
+    baseFontSize: 18,
     fontColor: '#070707',
     backgroundColor: '#fafdff'
   },
   files: {
-    contentWidth: 'Max'
+    autosave: 0,
+    contentWidth: 0
   }
 }
 

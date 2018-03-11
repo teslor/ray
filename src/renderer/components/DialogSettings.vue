@@ -5,20 +5,20 @@
       :visible="displayDialog"
       :close-on-click-modal="true"
       :before-close="hideDialog"
-      width="450px"
+      width="460px"
       @open="handleDialogOpen">
 
     <el-tabs v-model="activeTab">
       <el-tab-pane label="Editor" name="editor">
-        <el-form class="ds-form" :model="settings.editor" label-width="180px">
+        <el-form class="ds-form" :model="settings.editor" label-width="200px">
           <el-form-item label="Main Font">
             <el-select size="medium" v-model="settings.editor.mainFont" placeholder="Select">
-              <el-option v-for="item in fonts" :key="item" :value="item"/>
+              <el-option v-for="item in fontItems" :key="item" :value="item"/>
             </el-select>
           </el-form-item>
           <el-form-item label="Base Font Size">
             <el-select size="medium" v-model="settings.editor.baseFontSize" placeholder="Select">
-              <el-option v-for="item in fontSizes" :key="item" :value="item"/>
+              <el-option v-for="item in fontSizeItems" :key="item.value" :label="item.label" :value="item.value"/>
             </el-select>
           </el-form-item>
           <el-form-item label="Font Color">
@@ -30,10 +30,15 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="Files" name="files">
-        <el-form class="ds-form" :model="settings.files" label-width="180px">
+        <el-form class="ds-form" :model="settings.files" label-width="200px">
+          <el-form-item label="Autosave Changed Files">
+            <el-select size="medium" v-model="settings.files.autosave" placeholder="Select">
+              <el-option v-for="item in autoSaveItems" :key="item.value" :label="item.label" :value="item.value"/>
+            </el-select>
+          </el-form-item>
           <el-form-item label="Content Width">
             <el-select size="medium" v-model="settings.files.contentWidth" placeholder="Select">
-              <el-option v-for="item in contentWidths" :key="item" :value="item"/>
+              <el-option v-for="item in contentWidthItems" :key="item.value" :label="item.label" :value="item.value"/>
             </el-select>
           </el-form-item>
         </el-form>
@@ -63,19 +68,40 @@
       return {
         activeTab: 'editor',
 
-        fonts: ['Auto', 'Helvetica', 'Roboto', 'Verdana'],
-        fontSizes: ['14 px', '16 px', '18 px', '20 px', '22 px', '24 px'],
-        contentWidths: ['Max', '800 px', '1000 px', '1200 px', '1600 px'],
+        fontItems: ['Auto', 'Helvetica', 'Roboto', 'Verdana'],
+        fontSizeItems: [
+          { value: 14, label: '14 px' },
+          { value: 16, label: '16 px' },
+          { value: 18, label: '18 px' },
+          { value: 20, label: '20 px' },
+          { value: 22, label: '22 px' },
+          { value: 24, label: '24 px' }
+        ],
+        autoSaveItems: [
+          { value: 0, label: 'Disabled' },
+          { value: 2, label: 'Every 2 min' },
+          { value: 5, label: 'Every 5 min' },
+          { value: 10, label: 'Every 10 min' },
+          { value: 20, label: 'Every 20 min' }
+        ],
+        contentWidthItems: [
+          { value: 0, label: 'Max' },
+          { value: 800, label: '800 px' },
+          { value: 1000, label: '1000 px' },
+          { value: 1200, label: '1200 px' },
+          { value: 1600, label: '1600 px' }
+        ],
 
         settings: {
           editor: {
             mainFont: '',
-            baseFontSize: '',
+            baseFontSize: 16,
             fontColor: '',
             backgroundColor: ''
           },
           files: {
-            contentWidth: ''
+            autosave: 0,
+            contentWidth: 0
           }
         }
       }
@@ -121,16 +147,6 @@
 </script>
 
 <style>
-  .ds-form {
-    & .el-form-item__content {
-      display: flex;
-    }
-
-    & .el-select, & .el-input-number {
-      width: 120px;
-    }
-  }
-
   .ds-dialog {
     & .dialog-footer {
       display: flex;
@@ -145,6 +161,16 @@
 
     & .el-tabs__content {
       min-height: 210px;
+    }
+  }
+
+  .ds-form {
+    & .el-form-item__content {
+      display: flex;
+    }
+
+    & .el-select {
+      width: 130px;
     }
   }
 </style>

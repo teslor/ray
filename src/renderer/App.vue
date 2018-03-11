@@ -98,14 +98,30 @@
 
   /********** Main global styles **********/
 
-  * {
+  html {
     box-sizing: border-box;
+  }
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+
+  body {
+    user-select: none;
     margin: 0;
-    padding: 0;
+    -webkit-font-smoothing: antialiased;
   }
 
   body, input, textarea, select, button {
     font-family: var(--font-family-1);
+  }
+
+  h1, h2, h3, h4, h5, p, blockquote, figure, ol, ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  div {
+    cursor: default;
   }
 
   /********** Additional global styles **********/
@@ -119,7 +135,7 @@
     font-size: 16px;
   }
 
-  /********** Electron-UI styles ***********/
+  /********** Element-UI overrides ***********/
 
   .el-button {
     font-weight: 400;
@@ -127,6 +143,10 @@
 
   .el-dialog__body {
     padding: 20px;
+
+    & .el-tabs__item {
+      transform: translateZ(0);
+    }
   }
 
   .el-select-dropdown__item.selected {
@@ -134,7 +154,7 @@
   }
 
   .el-form-item {
-    margin-bottom: 16px;
+    margin-bottom: 15px;
   }
 
   .el-form-item__label {
@@ -153,13 +173,4 @@
     padding: 0;
     margin-top: 5px;
   }
-
-  /*.el-tooltip__popper {*/
-    /*color: #575757 !important;*/
-    /*border: 1px solid silver !important;*/
-  /*}*/
-
-  /*.popper__arrow {*/
-    /*border-bottom-color: silver !important;*/
-  /*}*/
 </style>

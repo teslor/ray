@@ -40,12 +40,13 @@
             trigger="click"
             :show-timeout="0"
             @click="saveFile"
-            @command="saveFileAs"
+            @command="handleSaveItemClick"
             split-button>
           <i class="far fa-clone"></i>
 
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>Save File As</el-dropdown-item>
+            <el-dropdown-item command="saveFileAs">Save File As</el-dropdown-item>
+            <el-dropdown-item command="saveAll">Save All</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
 
@@ -110,9 +111,13 @@
           this.saveFileAs()
         }
       },
-      saveFileAs () {
-        if (this.currentFile.path) ipc.send('save-file-dialog', { filePath: this.currentFile.path })
-        else ipc.send('save-file-dialog', { fileName: this.currentFile.name })
+      handleSaveItemClick (cmd) {
+        if (cmd === 'saveFileAs') {
+          if (this.currentFile.path) ipc.send('save-file-dialog', { filePath: this.currentFile.path })
+          else ipc.send('save-file-dialog', { fileName: this.currentFile.name })
+        } else if (cmd === 'saveAll') {
+          this.$store.commit('BUS_ADD_MESSAGE', { section: 'file', message: { text: 'save-all' } })
+        }
       },
       addFileToProject () {
         this.$store.commit('BUS_ADD_MESSAGE', { section: 'project', message: { text: 'add-file', filePath: this.currentFile.path } })

@@ -90,7 +90,7 @@
         immediate: true
       },
 
-      'file.flags.savedCounter' (newValue) {
+      'file.flags.savedCounter' () {
         const undoLength = this.editor.history.stack.undo.length
         this.savedUndo = undoLength > 0 ? this.editor.history.stack.undo[undoLength - 1] : null
       },
@@ -146,6 +146,9 @@
         theme: 'snow',
         modules: {
           toolbar: toolbarOptions,
+          clipboard: {
+            matchVisual: false
+          },
           history: {
             delay: 400,
             maxStack: 400
