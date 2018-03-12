@@ -220,10 +220,8 @@
     }
 
     & .el-tab-pane.dh-about {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 500;
-
-
     }
 
     & .el-tabs__item {

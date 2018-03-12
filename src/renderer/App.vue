@@ -108,7 +108,6 @@
   body {
     user-select: none;
     margin: 0;
-    -webkit-font-smoothing: antialiased;
   }
 
   body, input, textarea, select, button {
