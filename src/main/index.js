@@ -42,6 +42,7 @@ function createWindow () {
   if (appConfig) {
     try {
       Object.assign(mainWindowOptions, appConfig.get('view.window'))
+      if (mainWindowOptions.fullscreen === false) delete mainWindowOptions.fullscreen
     } catch (e) {}
   } else {
     mainWindowOptions.center = true
