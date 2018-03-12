@@ -120,21 +120,8 @@ ipc.on('quit-app', function (event) {
   app.quit()
 })
 
-ipc.on('save-project-dialog', function (event) {
-  const options = {
-    title: 'Save project',
-    filters: [
-      { name: 'JSON files', extensions: ['json'] }
-    ],
-    defaultPath: app.getPath('home')
-  }
-  dialog.showSaveDialog(mainWindow, options, function (filename) {
-    event.sender.send('save-project', filename)
-  })
-})
-
 ipc.on('open-file-dialog', function (event, payload) {
-  dialog.showOpenDialog({
+  dialog.showOpenDialog(mainWindow, {
     properties: ['openFile', 'multiSelections'],
     filters: [
       { name: 'HTML files', extensions: ['html', 'htm'] }
