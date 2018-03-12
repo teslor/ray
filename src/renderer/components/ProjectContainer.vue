@@ -56,6 +56,9 @@
           case 'add-file':
             if (!this.currentProject.name || !message.filePath) return
             this.addFile(message.filePath)
+            break
+          case 'reload':
+            this.$refs.ref_tree.loadTreeData()
         }
       }
     },
@@ -107,7 +110,7 @@
 
     methods: {
       createProject () {
-        this.$prompt('Project Name:', 'Creating a Project', {
+        this.$prompt('Project name:', 'Creating a Project', {
           confirmButtonText: 'OK',
           cancelButtonText: 'Cancel',
           inputValidator: name => this.$store.getters.getProjectByName(name) ? 'You already have a project with such name' : true

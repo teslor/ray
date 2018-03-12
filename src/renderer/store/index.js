@@ -22,7 +22,7 @@ let newFileId = 1
 const state = {
   bus: {
     project: null, // possible actions: create, rename, delete, save-all;
-    file: null, // possible actions: save-current, save-all, show-in-folder;
+    file: null, // possible actions: save, save-all, rename, show-in-folder;
     notification: null
   },
   newFileName: 'File-1',
@@ -118,6 +118,26 @@ const mutations = {
     if (i !== -1) state.projects[i].data = data
   },
 
+  [types.PROJECT_REPLACE_FILE] (state, { filePath, newFilePath, newFileName }) {
+    traverseProjectData(state.projects)
+
+    function traverseProjectData (obj) {
+      Object.keys(obj).forEach(key => {
+        if (typeof obj[key] !== 'object' || obj[key] === null) return
+
+        if (obj[key]['type'] === 'file') {
+          if (!obj[key]['data']) return
+          if (obj[key]['data']['path'] === filePath) {
+            obj[key]['text'] = newFileName
+            obj[key]['data']['path'] = newFilePath
+          }
+        } else {
+          traverseProjectData(obj[key])
+        }
+      })
+    }
+  },
+
   [types.FILE_SET_NEW_NAME] (state) {
     const name = state.newFileName.slice(0, 5)
     const num = +state.newFileName.slice(5) + 1
@@ -187,6 +207,8 @@ const mutations = {
 
   [types.SETTINGS_SET] (state, settings) {
     Object.keys(settings).forEach(section => {
+      // avoid error when open config with unknown settings section (e.g. config created in newer versions)
+      if (!state.settings[section]) state.settings[section] = {}
       Object.keys(settings[section]).forEach(key => {
         // baseFontSize is string in version <= 0.2.1 (remove later)
         if (key === 'baseFontSize') state.settings[section][key] = parseInt(settings[section][key])
@@ -445,6 +467,23 @@ const actions = {
       })
     }
     return true
+  },
+
+  async renameFile ({ dispatch, commit, state, getters }, { file, newFileName }) {
+    const filePath = file.path
+    const newFilePath = path.join(path.dirname(filePath), newFileName + path.extname(filePath))
+    try {
+      if (fs.existsSync(newFilePath)) throw new Error('file already exists')
+      fs.renameSync(filePath, newFilePath)
+      commit(types.FILE_SET_PATH, { fileId: file.id, filePath: newFilePath })
+      commit(types.FILE_SET_NAME, { fileId: file.id, fileName: newFileName })
+      commit(types.PROJECT_REPLACE_FILE, { filePath, newFilePath, newFileName })
+      commit(types.BUS_ADD_MESSAGE, { section: 'project', message: { text: 'reload' } })
+    } catch (e) {
+      commit('BUS_ADD_MESSAGE', {
+        section: 'notification', message: { text: `Unable to rename file "${filePath}" (${e.message})`, type: 'error' }
+      })
+    }
   },
 
   async closeFile ({ dispatch, commit, state, getters }, { fileId }) {

@@ -1,6 +1,6 @@
 {
   "name": "ray",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "author": {
     "name": "Pavel D.",
     "email": "pvd367@gmail.com"
@@ -40,7 +40,7 @@
       "dist/electron/**/*"
     ],
     "mac": {
-      "icon": "build/icons/icons.icns"
+      "icon": "build/icons/icon.icns"
     },
     "win": {
       "target": "nsis",

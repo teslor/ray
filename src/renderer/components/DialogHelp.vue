@@ -27,8 +27,10 @@
         <p class="dh-tips">Tips:</p>
         <ul>
           <li>Ray keeps the latest five files that were recently closed to provide quick access to them.</li>
+          <li>When you rename a file by using the app the file paths/names in all your projects are updated automatically.</li>
           <li>You can copy file contents from another program to the buffer and paste in the editor as HTML.</li>
           <li>You can insert images, video links and hyperlinks in file contents. Hyperlinks are opened in your default browser.</li>
+          <li>It's possible to open multiple files at once.</li>
           <li>When creating hyperlinks you can also refer to other local HTML files by using file:/// protocol.</li>
         </ul>
 
@@ -127,6 +129,7 @@
             { keys: 'Ctrl + O', text: 'Open File(s)', icon: 'far fa-folder-open fa-sm' },
             { keys: 'Ctrl + S', text: 'Save File / Save File As', icon: 'far fa-clone fa-sm' },
             { keys: 'Ctrl + Alt + Shift + S', text: 'Save All Files (that have changes)' },
+            { keys: 'Ctrl + R', text: 'Rename File' },
             { keys: 'Ctrl + W', text: 'Close File' },
             { keys: 'Ctrl + F', text: 'Find Text in File', icon: 'fas fa-search fa-sm' },
             { keys: 'Ctrl + Shift + E', text: 'Show File in Explorer/Finder', icon: 'fas fa-external-link-alt' }

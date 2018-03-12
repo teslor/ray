@@ -50,6 +50,7 @@
           </el-dropdown-menu>
         </el-dropdown>
 
+        <el-button class="ab-button" :disabled="!currentFile.path" @click="renameFile"><i class="fas fa-edit"></i></el-button>
         <el-button v-show="currentFile.dataType" class="ab-button" :class="{ highlighted: currentFile.searchMode }" @click="toggleSearch"><i class="fas fa-search"></i></el-button>
       </div>
     </div>
@@ -106,10 +107,13 @@
       },
       saveFile () {
         if (this.currentFile.path) {
-          this.$store.commit('BUS_ADD_MESSAGE', { section: 'file', message: { text: 'save-current' } })
+          this.$store.commit('BUS_ADD_MESSAGE', { section: 'file', message: { text: 'save' } })
         } else {
           this.saveFileAs()
         }
+      },
+      renameFile () {
+        this.$store.commit('BUS_ADD_MESSAGE', { section: 'file', message: { text: 'rename' } })
       },
       handleSaveItemClick (cmd) {
         if (cmd === 'saveFileAs') {

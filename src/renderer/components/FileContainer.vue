@@ -67,14 +67,18 @@
       busMessageFile (message) {
         if (!message) return
         switch (message.text) {
-          case 'save-current':
+          case 'save':
             this.saveCurrentFile()
+            break
+          case 'save-all':
+            this.saveAllFiles()
+            break
+          case 'rename':
+            this.renameCurrentFile()
             break
           case 'show-in-folder':
             this.$electron.shell.showItemInFolder(this.currentFile.path)
             break
-          case 'save-all':
-            this.saveAllFiles()
         }
       },
 
@@ -138,6 +142,9 @@
       this.$Mousetrap.bindGlobal(['command+alt+shift+s', 'ctrl+alt+shift+s'], () => {
         if (this.allowShortcuts) this.saveAllFiles()
       })
+      this.$Mousetrap.bindGlobal(['command+r', 'ctrl+r'], () => {
+        if (this.allowShortcuts) this.$store.commit('BUS_ADD_MESSAGE', { section: 'file', message: { text: 'rename' } })
+      })
       this.$Mousetrap.bindGlobal(['command+w', 'ctrl+w'], () => {
         if (this.allowShortcuts) this.closeFile(this.currentFile)
       })
@@ -176,6 +183,19 @@
             contents: fe.editor.root.innerHTML
           })
         })
+      },
+      renameCurrentFile () {
+        this.$prompt('New name:', 'Renaming the File', {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          inputValue: this.currentFile.name,
+          inputValidator: name => name.length === 0 ? 'Empty name' : true
+        }).then(result => {
+          if (result.value === this.currentFile.name) return
+          this.$store.dispatch('renameFile', {
+            file: this.currentFile,
+            newFileName: result.value })
+        }).catch(() => {})
       },
       closeFile (file) {
         if (file.flags.wasChanged) {

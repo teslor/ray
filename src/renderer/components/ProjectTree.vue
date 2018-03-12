@@ -40,7 +40,8 @@
         treeElementRef: null,
         treeData: null,
         currentNode: null,
-        currentNodeType: ''
+        currentNodeType: '',
+        loadingData: false
       }
     },
 
@@ -75,11 +76,11 @@
       if (this.project) this.loadTreeData()
 
       // Event listeners
-      this.treeElement.on('changed.jstree', (e, data) => {
+      this.treeElement.on('changed.jstree', (e, data) => { // triggered when selection changes
         this.currentNode = data.selected[0]
         const nodeInfo = this.treeElementRef.get_node(this.currentNode)
         this.currentNodeType = nodeInfo.type
-        if (nodeInfo.type === 'file' && nodeInfo.data && nodeInfo.data.path) {
+        if (!this.loadingData && nodeInfo.type === 'file' && nodeInfo.data && nodeInfo.data.path) {
           this.$store.dispatch('openFile', { filePath: nodeInfo.data.path, setCurrent: true })
         }
       })
@@ -130,8 +131,10 @@
         return data
       },
       loadTreeData () {
+        this.loadingData = true
         this.treeElement.jstree(true).settings.core.data = this.project.data
         this.treeElement.jstree(true).refresh(true)
+        setTimeout(() => { this.loadingData = false }, 100) // prevent activating/opening selected file when reloading
       },
       updateProjectData: debounce(function () {
         this.$store.commit('PROJECT_SET_DATA', { projectName: this.project.name, data: this.getTreeData() })
