@@ -90,10 +90,10 @@
 
     methods: {
       requestAddRootFile () {
-        ipc.send('open-file-dialog', { target: 'pt', action: 'addRootFile' })
+        setTimeout(() => { ipc.send('open-file-dialog', { target: 'pt', action: 'addRootFile' }) })
       },
       requestAddFile () {
-        ipc.send('open-file-dialog', { target: 'pt', action: 'addFile' })
+        setTimeout(() => { ipc.send('open-file-dialog', { target: 'pt', action: 'addFile' }) })
       },
       addRootFolder () {
         this.addFolder(true)

@@ -121,7 +121,7 @@ ipc.on('quit-app', function (event) {
 })
 
 ipc.on('open-file-dialog', function (event, payload) {
-  dialog.showOpenDialog(mainWindow, {
+  dialog.showOpenDialog({
     properties: ['openFile', 'multiSelections'],
     filters: [
       { name: 'HTML files', extensions: ['html', 'htm'] }
@@ -148,7 +148,7 @@ ipc.on('save-file-dialog', function (event, payload) {
     ],
     defaultPath
   }
-  dialog.showSaveDialog(mainWindow, options, function (filename) {
+  dialog.showSaveDialog(options, function (filename) {
     event.sender.send('save-file', filename)
   })
 })

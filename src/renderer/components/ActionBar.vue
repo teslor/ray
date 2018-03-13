@@ -63,7 +63,6 @@
 </template>
 
 <script>
-  import { ipcRenderer as ipc } from 'electron'
   import { mapState } from 'vuex'
 
   export default {
@@ -97,31 +96,23 @@
         this.$store.commit('VIEW_TOGGLE_DIALOG_PROJECTS', true)
       },
       openFile () {
-        ipc.send('open-file-dialog')
+        this.$store.commit('BUS_ADD_MESSAGE', { section: 'file', message: { text: 'open' } })
       },
-      openFileByPath (path) {
-        this.$store.dispatch('openFile', {
-          filePath: path,
-          setCurrent: true
-        })
+      openFileByPath (filePath) { // open recent file
+        this.$store.commit('BUS_ADD_MESSAGE', { section: 'file', message: { text: 'open', filePath } })
       },
       saveFile () {
-        if (this.currentFile.path) {
-          this.$store.commit('BUS_ADD_MESSAGE', { section: 'file', message: { text: 'save' } })
-        } else {
-          this.saveFileAs()
+        this.$store.commit('BUS_ADD_MESSAGE', { section: 'file', message: { text: 'save' } })
+      },
+      handleSaveItemClick (cmd) {
+        if (cmd === 'saveFileAs') {
+          this.$store.commit('BUS_ADD_MESSAGE', { section: 'file', message: { text: 'save-as' } })
+        } else if (cmd === 'saveAll') {
+          this.$store.commit('BUS_ADD_MESSAGE', { section: 'file', message: { text: 'save-all' } })
         }
       },
       renameFile () {
         this.$store.commit('BUS_ADD_MESSAGE', { section: 'file', message: { text: 'rename' } })
-      },
-      handleSaveItemClick (cmd) {
-        if (cmd === 'saveFileAs') {
-          if (this.currentFile.path) ipc.send('save-file-dialog', { filePath: this.currentFile.path })
-          else ipc.send('save-file-dialog', { fileName: this.currentFile.name })
-        } else if (cmd === 'saveAll') {
-          this.$store.commit('BUS_ADD_MESSAGE', { section: 'file', message: { text: 'save-all' } })
-        }
       },
       addFileToProject () {
         this.$store.commit('BUS_ADD_MESSAGE', { section: 'project', message: { text: 'add-file', filePath: this.currentFile.path } })

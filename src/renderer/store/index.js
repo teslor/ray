@@ -22,7 +22,7 @@ let newFileId = 1
 const state = {
   bus: {
     project: null, // possible actions: create, rename, delete, save-all;
-    file: null, // possible actions: save, save-all, rename, show-in-folder;
+    file: null, // possible actions: open, save, save-as, save-all, rename, show-in-folder;
     notification: null
   },
   newFileName: 'File-1',

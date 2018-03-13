@@ -18,16 +18,8 @@
             <span v-if="file.flags.wasChanged" class="fc-changed"></span>
           </transition>
         </span>
-        <file-editor
-            v-if="file.dataType"
-            ref="ref_editors"
-            :file="file"
-            :active="file.id === currentFile.id">
-        </file-editor>
-        <file-viewer
-            v-else
-            :file="file"
-            :active="file.id === currentFile.id"/>
+        <file-editor v-if="file.dataType" :file="file" :active="file.id === currentFile.id" ref="ref_editors" />
+        <file-viewer v-else :file="file" :active="file.id === currentFile.id"/>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -67,8 +59,14 @@
       busMessageFile (message) {
         if (!message) return
         switch (message.text) {
+          case 'open':
+            this.openFile(message.filePath)
+            break
           case 'save':
             this.saveCurrentFile()
+            break
+          case 'save-as':
+            this.saveCurrentFile(true)
             break
           case 'save-all':
             this.saveAllFiles()
@@ -134,7 +132,7 @@
         if (this.allowShortcuts) this.$store.dispatch('createNewFile')
       })
       this.$Mousetrap.bindGlobal(['command+o', 'ctrl+o'], () => {
-        if (this.allowShortcuts) ipc.send('open-file-dialog')
+        if (this.allowShortcuts) this.openFile()
       })
       this.$Mousetrap.bindGlobal(['command+s', 'ctrl+s'], () => {
         if (this.allowShortcuts && this.currentFile.dataType) this.saveCurrentFile()
@@ -143,7 +141,7 @@
         if (this.allowShortcuts) this.saveAllFiles()
       })
       this.$Mousetrap.bindGlobal(['command+r', 'ctrl+r'], () => {
-        if (this.allowShortcuts) this.$store.commit('BUS_ADD_MESSAGE', { section: 'file', message: { text: 'rename' } })
+        if (this.allowShortcuts) this.renameCurrentFile()
       })
       this.$Mousetrap.bindGlobal(['command+w', 'ctrl+w'], () => {
         if (this.allowShortcuts) this.closeFile(this.currentFile)
@@ -160,8 +158,19 @@
       getActiveEditorComponent () {
         return this.$refs.ref_editors.find(e => e.active)
       },
-      saveCurrentFile () {
+      openFile (filePath) {
+        if (filePath) this.$store.dispatch('openFile', { filePath, setCurrent: true })
+        else setTimeout(() => { ipc.send('open-file-dialog') }) // avoid dialog issues on macOS
+      },
+      saveCurrentFile (asNew) {
         if (this.currentFile.path) {
+          if (asNew) {
+            setTimeout(() => { // avoid dialog issues on macOS
+              ipc.send('save-file-dialog', { filePath: this.currentFile.path })
+            })
+            return
+          }
+
           const currentEditor = this.getActiveEditorComponent().editor
           this.$store.dispatch('saveFile', {
             file: this.currentFile,
@@ -169,7 +178,7 @@
             contents: currentEditor.root.innerHTML
           })
         } else {
-          setTimeout(() => { // prevent auto closing of Save dialog in macOS
+          setTimeout(() => { // avoid dialog issues on macOS
             ipc.send('save-file-dialog', { fileName: this.currentFile.name })
           })
         }
