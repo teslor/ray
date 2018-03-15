@@ -137,7 +137,7 @@ ipc.on('open-file-dialog', function (event, payload) {
 ipc.on('save-file-dialog', function (event, payload) {
   let defaultPath = app.getPath('home')
   if (payload) {
-    if (payload.fileName) defaultPath = path.join(defaultPath, payload.fileName)
+    if (payload.fileName) defaultPath = path.join(defaultPath, payload.fileName + '.html')
     else if (payload.filePath) defaultPath = payload.filePath
   }
 

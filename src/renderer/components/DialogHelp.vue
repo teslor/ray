@@ -72,13 +72,9 @@
 
       <el-tab-pane label="About" class="dh-about">
         <h2>Ray 0.3.0</h2>
-        <p>Project Link:</p>
+        <p>Project link:</p>
         <p><a class="dh-link" href="" @click.prevent="openLink('https://github.com/teslor/ray')">
           https://github.com/teslor/ray
-        </a></p>
-        <p style="margin-top:15px">Releases:</p>
-        <p><a class="dh-link" href="" @click.prevent="openLink('https://github.com/teslor/ray/releases')">
-          https://github.com/teslor/ray/releases
         </a></p>
         <br>
         <p>Thank you for using Ray!</p>
