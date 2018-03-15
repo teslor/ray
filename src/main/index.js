@@ -128,7 +128,7 @@ ipc.on('open-file-dialog', function (event, payload) {
     ]
   }, function (files) {
     if (files) {
-      if (payload && payload.target === 'pt') event.sender.send('add-project-files', files, payload.action)
+      if (payload && payload.target === 'pc') event.sender.send('add-project-files', files, payload.action)
       else event.sender.send('open-file', files)
     }
   })

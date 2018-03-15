@@ -21,7 +21,6 @@
 </template>
 
 <script>
-  import { ipcRenderer as ipc } from 'electron'
   import path from 'path'
   import debounce from 'lodash/debounce'
   import $ from 'jquery'
@@ -90,10 +89,10 @@
 
     methods: {
       requestAddRootFile () {
-        setTimeout(() => { ipc.send('open-file-dialog', { target: 'pt', action: 'addRootFile' }) })
+        this.$store.commit('BUS_ADD_MESSAGE', { section: 'project', message: { text: 'add-files', action: 'addRootFile' } })
       },
       requestAddFile () {
-        setTimeout(() => { ipc.send('open-file-dialog', { target: 'pt', action: 'addFile' }) })
+        this.$store.commit('BUS_ADD_MESSAGE', { section: 'project', message: { text: 'add-files', action: 'addFile' } })
       },
       addRootFolder () {
         this.addFolder(true)

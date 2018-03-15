@@ -115,7 +115,7 @@
         this.$store.commit('BUS_ADD_MESSAGE', { section: 'file', message: { text: 'rename' } })
       },
       addFileToProject () {
-        this.$store.commit('BUS_ADD_MESSAGE', { section: 'project', message: { text: 'add-file', filePath: this.currentFile.path } })
+        this.$store.commit('BUS_ADD_MESSAGE', { section: 'project', message: { text: 'add-files', filePath: this.currentFile.path } })
       },
       showFileInExplorer () {
         this.$store.commit('BUS_ADD_MESSAGE', { section: 'file', message: { text: 'show-in-folder' } })

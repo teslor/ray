@@ -143,7 +143,6 @@
             { keys: 'Ctrl + Shift + 7', text: 'Change Case: lowercase' },
             { keys: 'Ctrl + 8', text: 'Change Case: Sentence case' },
             { keys: 'Ctrl + Shift + 8', text: 'Change Case: Title Case' },
-            { keys: 'Ctrl + A', text: 'Select All' },
             { keys: 'Ctrl + B', text: 'Bold Text' },
             { keys: 'Ctrl + I', text: 'Italic Text' },
             { keys: 'Ctrl + U', text: 'Underlined Text' },

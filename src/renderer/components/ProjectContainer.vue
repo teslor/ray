@@ -53,9 +53,9 @@
           case 'save-all':
             this.saveProjects()
             break
-          case 'add-file':
-            if (!this.currentProject.name || !message.filePath) return
-            this.addFile(message.filePath)
+          case 'add-files':
+            if (!this.currentProject.name) return
+            this.addFiles(message)
             break
           case 'reload':
             this.$refs.ref_tree.loadTreeData()
@@ -104,7 +104,7 @@
         if (this.allowShortcuts) this.$store.commit('PROJECT_SET_CURRENT', null)
       })
       this.$Mousetrap.bindGlobal(['command+alt+=', 'ctrl+alt+='], () => {
-        if (this.allowShortcuts) this.$store.commit('BUS_ADD_MESSAGE', { section: 'project', message: { text: 'add-file', filePath: this.currentFile.path } })
+        if (this.allowShortcuts) this.$store.commit('BUS_ADD_MESSAGE', { section: 'project', message: { text: 'add-files', filePath: this.currentFile.path } })
       })
     },
 
@@ -144,8 +144,12 @@
       saveProjects () {
         this.$store.dispatch('saveProjects')
       },
-      addFile (filePath) {
-        this.$refs.ref_tree.addFile(filePath)
+      addFiles ({ action, filePath }) {
+        if (action) {
+          setTimeout(() => { ipc.send('open-file-dialog', { target: 'pc', action }) })
+        } else if (filePath) {
+          this.$refs.ref_tree.addFile(filePath)
+        }
       }
     }
   }

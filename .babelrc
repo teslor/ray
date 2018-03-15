@@ -31,7 +31,7 @@
       "component",
       {
         "libraryName": "element-ui",
-        "styleLibraryName": "theme-chalk"
+        "style": false
       }
     ],
     "transform-runtime"
