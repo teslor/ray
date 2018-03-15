@@ -9,7 +9,7 @@ Create, style, organize your personal notes!
 </p>
 <img src="https://img.shields.io/badge/version-0.2.1%20Beta-orange.svg" alt="v0.2.1 Beta">
 
-![Main Screenshot](/static/screenshots/win.png)
+![Main Screenshot](/static/screenshots/mac.png)
 
 ### :surfer: Platforms
 Ray is based on Electron platform and can be run on Windows, macOS and Linux. 
