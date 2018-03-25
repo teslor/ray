@@ -127,7 +127,7 @@
         }
       })
 
-      // Shortcut handlers
+      // Shortcut handlers (general)
       this.$Mousetrap.bindGlobal(['command+n', 'ctrl+n'], () => {
         if (this.allowShortcuts) this.$store.dispatch('createNewFile')
       })
@@ -151,6 +151,73 @@
       })
       this.$Mousetrap.bindGlobal(['command+shift+e', 'ctrl+shift+e'], () => {
         if (this.allowShortcuts) this.$store.commit('BUS_ADD_MESSAGE', { section: 'file', message: { text: 'show-in-folder' } })
+      })
+
+      // Shortcut handlers (editor)
+      // Add shortcuts for headers
+      for (let i = 1; i < 6; i += 1) {
+        const key = String(i)
+        this.$Mousetrap.bindGlobal([`command+${key}`, `ctrl+${key}`], () => {
+          const currentEditorComponent = this.getActiveEditorComponent()
+          if (this.allowShortcuts && currentEditorComponent) currentEditorComponent.formatText('header', i)
+        })
+      }
+      // Add shortcuts for text transformations
+      this.$Mousetrap.bindGlobal(['command+7', 'ctrl+7'], () => {
+        const currentEditorComponent = this.getActiveEditorComponent()
+        if (this.allowShortcuts && currentEditorComponent) currentEditorComponent.transformText('u')
+      })
+      this.$Mousetrap.bindGlobal(['command+shift+7', 'ctrl+shift+7'], () => {
+        const currentEditorComponent = this.getActiveEditorComponent()
+        if (this.allowShortcuts && currentEditorComponent) currentEditorComponent.transformText('l')
+      })
+      this.$Mousetrap.bindGlobal(['command+8', 'ctrl+8'], () => {
+        const currentEditorComponent = this.getActiveEditorComponent()
+        if (this.allowShortcuts && currentEditorComponent) currentEditorComponent.transformText('s')
+      })
+      this.$Mousetrap.bindGlobal(['command+shift+8', 'ctrl+shift+8'], () => {
+        const currentEditorComponent = this.getActiveEditorComponent()
+        if (this.allowShortcuts && currentEditorComponent) currentEditorComponent.transformText('t')
+      })
+      // Shortcuts for lists
+      this.$Mousetrap.bindGlobal(['command+/', 'ctrl+/'], () => {
+        const currentEditorComponent = this.getActiveEditorComponent()
+        if (this.allowShortcuts && currentEditorComponent) currentEditorComponent.formatText('list', 'bullet')
+      })
+      this.$Mousetrap.bindGlobal(['command+shift+/', 'ctrl+shift+/'], () => {
+        const currentEditorComponent = this.getActiveEditorComponent()
+        if (this.allowShortcuts && currentEditorComponent) currentEditorComponent.formatText('list', 'ordered')
+      })
+      // Shortcuts for align
+      this.$Mousetrap.bindGlobal(['command+shift+l', 'ctrl+shift+l'], () => {
+        const currentEditorComponent = this.getActiveEditorComponent()
+        if (this.allowShortcuts && currentEditorComponent) currentEditorComponent.formatText('align', false)
+      })
+      this.$Mousetrap.bindGlobal(['command+shift+e', 'ctrl+shift+e'], () => {
+        const currentEditorComponent = this.getActiveEditorComponent()
+        if (this.allowShortcuts && currentEditorComponent) currentEditorComponent.formatText('align', 'center')
+      })
+      this.$Mousetrap.bindGlobal(['command+shift+r', 'ctrl+shift+r'], () => {
+        const currentEditorComponent = this.getActiveEditorComponent()
+        if (this.allowShortcuts && currentEditorComponent) currentEditorComponent.formatText('align', 'right')
+      })
+      this.$Mousetrap.bindGlobal(['command+shift+j', 'ctrl+shift+j'], () => {
+        const currentEditorComponent = this.getActiveEditorComponent()
+        if (this.allowShortcuts && currentEditorComponent) currentEditorComponent.formatText('align', 'justify')
+      })
+      // Shortcuts for format superscript/subscript
+      this.$Mousetrap.bindGlobal(['command+.', 'ctrl+.'], () => {
+        const currentEditorComponent = this.getActiveEditorComponent()
+        if (this.allowShortcuts && currentEditorComponent) currentEditorComponent.formatText('script', 'super')
+      })
+      this.$Mousetrap.bindGlobal(['command+,', 'ctrl+,'], () => {
+        const currentEditorComponent = this.getActiveEditorComponent()
+        if (this.allowShortcuts && currentEditorComponent) currentEditorComponent.formatText('script', 'sub')
+      })
+      // Shortcut for format removing
+      this.$Mousetrap.bindGlobal(['command+e', 'ctrl+e'], () => {
+        const currentEditorComponent = this.getActiveEditorComponent()
+        if (this.allowShortcuts && currentEditorComponent) currentEditorComponent.removeFormat()
       })
     },
 

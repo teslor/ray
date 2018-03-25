@@ -133,7 +133,7 @@
           ['bold', 'italic', 'underline', 'strike'],
           ['blockquote', 'code-block'],
           [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'align': [] }],
-          [{ 'script': 'sub' }, { 'script': 'super' }],
+          [{ 'script': 'super' }, { 'script': 'sub' }],
           [{ 'indent': '-1' }, { 'indent': '+1' }],
           // [{ 'direction': 'rtl' }],
           [{ 'color': [] }, { 'background': [] }],
@@ -169,31 +169,6 @@
       this.toolbarElement = this.$refs.ref_wrapper.querySelector('.ql-toolbar')
       this.editorElement = this.$refs.ref_wrapper.querySelector('.ql-editor')
 
-      // Add shortcuts for headers
-      for (let i = 1; i < 6; i += 1) {
-        const key = String(i)
-        this.editor.keyboard.addBinding({ key, ctrlKey: true }, range => {
-          this.editor.formatLine(range, 'header', key)
-        })
-      }
-      // Add shortcut for format removing
-      this.editor.keyboard.addBinding({ key: 'E', ctrlKey: true }, range => {
-        this.editor.removeFormat(range)
-      })
-      // Add shortcuts for text transformations
-      this.editor.keyboard.addBinding({ key: '7', ctrlKey: true }, range => {
-        this.transformText('u', range)
-      })
-      this.editor.keyboard.addBinding({ key: '7', ctrlKey: true, shiftKey: true }, range => {
-        this.transformText('l', range)
-      })
-      this.editor.keyboard.addBinding({ key: '8', ctrlKey: true }, range => {
-        this.transformText('s', range)
-      })
-      this.editor.keyboard.addBinding({ key: '8', ctrlKey: true, shiftKey: true }, range => {
-        this.transformText('t', range)
-      })
-
       this.editor.on('text-change', (delta, oldDelta, source) => {
         const undoLength = this.editor.history.stack.undo.length
         const lastUndo = undoLength > 0 ? this.editor.history.stack.undo[undoLength - 1] : null
@@ -214,7 +189,20 @@
         this.editor.history.clear()
       },
 
-      transformText (t, range) {
+      formatText (format, value) {
+        const range = this.editor.getSelection()
+        const currentFormat = this.editor.getFormat(range)
+        if (currentFormat[format] === value) return
+        this.editor.format(format, value, 'user')
+      },
+
+      removeFormat () {
+        const range = this.editor.getSelection()
+        this.editor.removeFormat(range)
+      },
+
+      transformText (t) {
+        const range = this.editor.getSelection()
         let text = this.editor.getText(range.index, range.length)
 
         if (t === 'u') {

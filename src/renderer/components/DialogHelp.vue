@@ -142,10 +142,19 @@
             { keys: 'Ctrl + B', text: 'Bold Text' },
             { keys: 'Ctrl + I', text: 'Italic Text' },
             { keys: 'Ctrl + U', text: 'Underlined Text' },
+            { keys: 'Ctrl + /', text: 'Bulleted List' },
+            { keys: 'Ctrl + Shift + /', text: 'Numbered List' },
+            { keys: 'Ctrl + Shift + L', text: 'Align Left' },
+            { keys: 'Ctrl + Shift + E', text: 'Align Centre' },
+            { keys: 'Ctrl + Shift + R', text: 'Align Right' },
+            { keys: 'Ctrl + Shift + J', text: 'Align Justify' },
+            { keys: 'Ctrl + .', text: 'Superscript' },
+            { keys: 'Ctrl + ,', text: 'Subscript' },
             { keys: 'Ctrl + K', text: 'Set Hyperlink' },
-            { keys: 'Ctrl + E', text: 'Remove Format' },
             { keys: 'Ctrl + Z', text: 'Undo' },
-            { keys: 'Ctrl + Shift + Z', text: 'Redo' }
+            { keys: 'Ctrl + Shift + Z', text: 'Redo' },
+            { keys: 'Ctrl + E', text: 'Clear Formatting' },
+            { keys: 'Ctrl + Shift + V', text: 'Paste Without Formatting' }
           ]
         }
       ]
