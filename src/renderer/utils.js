@@ -3,7 +3,8 @@ const defaultValues = {
     mainFont: 'Roboto',
     baseFontSize: 18,
     fontColor: '#070707',
-    backgroundColor: '#fafdff'
+    backgroundColor: '#fafdff',
+    lineSpacing: 1.6
   },
   files: {
     autosave: 0,

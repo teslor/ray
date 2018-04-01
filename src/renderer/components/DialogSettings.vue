@@ -27,6 +27,9 @@
           <el-form-item label="Background Color">
             <el-color-picker size="medium" v-model="settings.editor.backgroundColor"/>
           </el-form-item>
+          <el-form-item label="Line Spacing">
+            <el-input-number size="medium" v-model="settings.editor.lineSpacing" controls-position="right" :min="1" :max="2" :step="0.1"/>
+          </el-form-item>
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="Files" name="files">
@@ -95,9 +98,10 @@
         settings: {
           editor: {
             mainFont: '',
-            baseFontSize: 16,
+            baseFontSize: 0,
             fontColor: '',
-            backgroundColor: ''
+            backgroundColor: '',
+            lineSpacing: 0
           },
           files: {
             autosave: 0,
@@ -169,7 +173,7 @@
       display: flex;
     }
 
-    & .el-select {
+    & .el-select, & .el-input-number {
       width: 130px;
     }
   }

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Mousetrap from 'mousetrap'
 import {
-  Dialog, Dropdown, DropdownMenu, DropdownItem, Input, Checkbox, Select, Option, Button, ButtonGroup,
+  Dialog, Dropdown, DropdownMenu, DropdownItem, Input, InputNumber, Checkbox, Select, Option, Button, ButtonGroup,
   Table, TableColumn, Form, FormItem, Tabs, TabPane, Tag, ColorPicker,
   MessageBox, Message, Notification
 } from 'element-ui'
@@ -33,6 +33,7 @@ Vue.use(Dropdown)
 Vue.use(DropdownMenu)
 Vue.use(DropdownItem)
 Vue.use(Input)
+Vue.use(InputNumber)
 Vue.use(Checkbox)
 Vue.use(Select)
 Vue.use(Option)
