@@ -71,7 +71,8 @@
 
     computed: {
       ...mapState({
-        editorSettings: state => state.settings.editor
+        editorSettings: state => state.settings.editor,
+        displayEditorToolbar: state => state.view.editorToolbar.visible
       }),
       ...mapGetters([
         'editorStyle'
@@ -88,6 +89,10 @@
           })
         },
         immediate: true
+      },
+
+      displayEditorToolbar (display) {
+        this.toggleToolbar(display)
       },
 
       'file.flags.savedCounter' () {
@@ -169,6 +174,8 @@
       this.toolbarElement = this.$refs.ref_wrapper.querySelector('.ql-toolbar')
       this.editorElement = this.$refs.ref_wrapper.querySelector('.ql-editor')
 
+      this.toggleToolbar(this.displayEditorToolbar)
+
       this.editor.on('text-change', (delta, oldDelta, source) => {
         const undoLength = this.editor.history.stack.undo.length
         const lastUndo = undoLength > 0 ? this.editor.history.stack.undo[undoLength - 1] : null
@@ -187,6 +194,11 @@
       loadContents () {
         this.editor.clipboard.dangerouslyPasteHTML(this.file.data)
         this.editor.history.clear()
+      },
+
+      toggleToolbar (display) {
+        if (display) this.toolbarElement.classList.remove('d-none')
+        else this.toolbarElement.classList.add('d-none')
       },
 
       formatText (format, value) {

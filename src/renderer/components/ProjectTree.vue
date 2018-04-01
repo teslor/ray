@@ -1,6 +1,6 @@
 <template>
   <div class='pt-wrapper'>
-    <div class='pt-action-bar' v-show="project.name">
+    <div class='pt-toolbar' v-show="project.name && displayProjectToolbar">
       <el-button-group>
         <el-button class='pt-action-button' @click="addRootFolder"><i class="far fa-folder"></i></el-button>
         <el-button class='pt-action-button' :disabled="!this.currentNode || this.currentNodeType === 'file'" @click="addFolder(false)">
@@ -21,6 +21,7 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
   import path from 'path'
   import debounce from 'lodash/debounce'
   import $ from 'jquery'
@@ -42,6 +43,12 @@
         currentNodeType: '',
         loadingData: false
       }
+    },
+
+    computed: {
+      ...mapState({
+        displayProjectToolbar: state => state.view.projectToolbar.visible
+      })
     },
 
     watch: {
@@ -173,7 +180,7 @@
     width: 100%;
   }
 
-  .pt-action-bar {
+  .pt-toolbar {
     background-color: var(--bg-color-1);
     padding: 2px 3px 4px 3px;
   }
@@ -190,6 +197,7 @@
     background: linear-gradient(180deg, #fefefe 0%, #fcfcfc 100%);
     font-family: var(--font-family-2);
     font-size: 15px;
+    padding: 2px 0;
 
     & .fa-folder {
       color: moccasin;

@@ -42,6 +42,15 @@ const state = {
       visible: false,
       width: 0
     },
+    actionBar: {
+      visible: true
+    },
+    projectToolbar: {
+      visible: true
+    },
+    editorToolbar: {
+      visible: true
+    },
     dialogProjects: {
       visible: false
     },
@@ -74,6 +83,9 @@ const getters = {
     let style = ''
     if (s.contentWidth > 0) style += `max-width:${s.contentWidth}px;margin:0 auto;`
     return style
+  },
+  allToolbarsVisible: state => {
+    return state.view.actionBar.visible && state.view.projectToolbar.visible && state.view.editorToolbar.visible
   },
   getProjectByName: state => name => {
     return state.projects.find(project => project.name === name)
@@ -223,6 +235,11 @@ const mutations = {
     else state.view.sidebar.visible = !state.view.sidebar.visible
   },
 
+  [types.VIEW_TOGGLE_TOOLBAR] (state, { toolbar, flag }) {
+    if (flag !== undefined) state.view[toolbar].visible = flag
+    else state.view[toolbar].visible = !state.view[toolbar].visible
+  },
+
   [types.VIEW_TOGGLE_DIALOG_PROJECTS] (state, flag) {
     if (flag !== undefined) state.view.dialogProjects.visible = flag
     else state.view.dialogProjects.visible = !state.view.dialogProjects.visible
@@ -259,6 +276,15 @@ const actions = {
         if (configStore.view.sidebar) {
           if (configStore.view.sidebar.visible !== undefined) commit(types.VIEW_TOGGLE_SIDEBAR, configStore.view.sidebar.visible)
           if (configStore.view.sidebar.width) commit(types.VIEW_SET_SIDEBAR_WIDTH, configStore.view.sidebar.width)
+        }
+        if (configStore.view.actionBar && configStore.view.actionBar.visible !== undefined) {
+          commit(types.VIEW_TOGGLE_TOOLBAR, { toolbar: 'actionBar', flag: configStore.view.actionBar.visible })
+        }
+        if (configStore.view.projectToolbar && configStore.view.projectToolbar.visible !== undefined) {
+          commit(types.VIEW_TOGGLE_TOOLBAR, { toolbar: 'projectToolbar', flag: configStore.view.projectToolbar.visible })
+        }
+        if (configStore.view.editorToolbar && configStore.view.editorToolbar.visible !== undefined) {
+          commit(types.VIEW_TOGGLE_TOOLBAR, { toolbar: 'editorToolbar', flag: configStore.view.editorToolbar.visible })
         }
       }
       // Projects
@@ -328,6 +354,15 @@ const actions = {
         sidebar: {
           visible: state.view.sidebar.visible,
           width: state.view.sidebar.width
+        },
+        actionBar: {
+          visible: state.view.actionBar.visible
+        },
+        projectToolbar: {
+          visible: state.view.projectToolbar.visible
+        },
+        editorToolbar: {
+          visible: state.view.editorToolbar.visible
         },
         window: windowSettings
       })

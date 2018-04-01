@@ -125,6 +125,10 @@
 
   /********** Additional global styles **********/
 
+  .d-none {
+    display: none;
+  }
+
   .markedText {
     background-color: aquamarine;
     font-style: inherit;

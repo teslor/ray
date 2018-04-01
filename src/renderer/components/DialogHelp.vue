@@ -103,6 +103,7 @@
             { keys: 'F1', text: 'Show Help', icon: 'fas fa-question fa-sm' },
             { keys: 'F9', text: 'Show Settings', icon: 'fas fa-cog fa-sm' },
             { keys: process.platform === 'darwin' ? 'Ctrl + Cmd + F' : 'F11', text: 'Toggle Fullscreen Mode' },
+            { keys: 'F12', text: 'Show/Hide All Toolbars' },
             { keys: 'Esc', text: 'Close Dialog' }
           ]
         },

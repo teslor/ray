@@ -28,7 +28,7 @@
             <el-color-picker size="medium" v-model="settings.editor.backgroundColor"/>
           </el-form-item>
           <el-form-item label="Line Spacing">
-            <el-input-number size="medium" v-model="settings.editor.lineSpacing" controls-position="right" :min="1" :max="2" :step="0.1"/>
+            <el-input-number size="medium" v-model="settings.editor.lineSpacing" controls-position="right" :min="1" :max="2.5" :step="0.1"/>
           </el-form-item>
         </el-form>
       </el-tab-pane>

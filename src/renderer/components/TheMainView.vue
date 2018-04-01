@@ -1,7 +1,7 @@
 <template>
   <div class="mv-wrapper">
     <main class="mv-main">
-      <action-bar/>
+      <action-bar v-show="displayActionBar"/>
       <div class="mv-elements">
         <transition name="sb">
           <project-container v-show="displaySidebar"/>
@@ -31,10 +31,12 @@
     computed: {
       ...mapState({
         currentProject: state => state.currentProject,
+        displayActionBar: state => state.view.actionBar.visible,
         displaySidebar: state => state.view.sidebar.visible
       }),
       ...mapGetters([
-        'allowShortcuts'
+        'allowShortcuts',
+        'allToolbarsVisible'
       ])
     },
 
@@ -52,6 +54,13 @@
       })
       this.$Mousetrap.bindGlobal(['f9'], () => {
         if (this.allowShortcuts) this.$store.commit('VIEW_TOGGLE_DIALOG_SETTINGS')
+      })
+      this.$Mousetrap.bindGlobal(['f12'], (event) => {
+        const flag = !this.allToolbarsVisible
+        const toolbars = ['actionBar', 'projectToolbar', 'editorToolbar']
+        toolbars.forEach(toolbar => {
+          this.$store.commit('VIEW_TOGGLE_TOOLBAR', { toolbar, flag })
+        })
       })
     }
   }
