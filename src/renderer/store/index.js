@@ -75,7 +75,7 @@ const getters = {
     style += `font-size:${s.baseFontSize}px;`
     style += `color:${s.fontColor};`
     style += `background-color:${s.backgroundColor};`
-    style += `line-height:${s.lineSpacing};`
+    style += `line-height:${s.lineHeight};`
     return style
   },
   filesStyle: state => {

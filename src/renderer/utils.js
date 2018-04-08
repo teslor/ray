@@ -4,7 +4,7 @@ const defaultValues = {
     baseFontSize: 18,
     fontColor: '#070707',
     backgroundColor: '#fafdff',
-    lineSpacing: 1.6
+    lineHeight: 1.6
   },
   files: {
     autosave: 0,
