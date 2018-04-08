@@ -71,7 +71,7 @@
       </el-tab-pane>
 
       <el-tab-pane label="About" class="dh-about">
-        <h2>Ray 0.3.0</h2>
+        <h2>Ray 0.3.1</h2>
         <p>Project link:</p>
         <p><a class="dh-link" href="" @click.prevent="openLink('https://github.com/teslor/ray')">
           https://github.com/teslor/ray
