@@ -181,8 +181,11 @@
   }
 
   .pt-toolbar {
+    min-width: var(--sb-min-width);
     background-color: var(--bg-color-1);
-    padding: 2px 3px 4px 3px;
+    padding: 2px 3px 3px 3px;
+    border-right: 1px solid var(--border-color-1);
+    border-bottom: 1px solid var(--border-color-1);
   }
 
   .pt-action-button {

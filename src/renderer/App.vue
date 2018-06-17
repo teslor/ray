@@ -123,6 +123,24 @@
     cursor: default;
   }
 
+  div::-webkit-scrollbar {
+    height: 10px;
+    width: 10px;
+  }
+
+  div::-webkit-scrollbar-thumb {
+    background: #e4e4e4;
+    border-radius: 5px;
+  }
+
+  div::-webkit-scrollbar-track {
+    background: #f9f9f9;
+  }
+
+  div::-webkit-scrollbar-corner {
+    background: #f9f9f9;
+  }
+
   /********** Additional global styles **********/
 
   .d-none {

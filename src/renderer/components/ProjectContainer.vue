@@ -64,7 +64,7 @@
     },
 
     mounted () {
-      this.sbMinWidth = 244
+      this.sbMinWidth = 242
       this.sbMaxWidth = 600
 
       // Wrapper resize handler
@@ -160,6 +160,7 @@
 
   .pc-wrapper {
     flex-shrink: 0;
+    position: relative;
     display: flex;
     min-width: var(--sb-min-width);
     width: var(--sb-min-width);
@@ -173,11 +174,13 @@
   }
 
   .pc-divider {
-    width: 3px;
     flex-shrink: 0;
-    border-left: 1px solid var(--border-color-2);
-    border-right: 1px solid var(--border-color-2);
-    background-color: var(--theme-color-1-l96);
+    width: 4px;
+    position: absolute;
+    opacity: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
     cursor: ew-resize;
   }
 
@@ -188,6 +191,7 @@
     height: 39px;
     line-height: 39px;
     background: linear-gradient(to bottom, var(--theme-color-1-l98) 0%, var(--theme-color-1-l96) 100%);
+    border-right: 1px solid var(--border-color-1);
     border-bottom: 1px solid var(--border-color-1);
     color: var(--theme-color-1-l40);
   }
