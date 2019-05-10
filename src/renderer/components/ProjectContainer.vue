@@ -13,9 +13,12 @@
   import { ipcRenderer as ipc } from 'electron'
   import { mapState, mapGetters } from 'vuex'
   import $ from 'jquery'
-  import 'jquery-resizable-dom'
   import throttle from 'lodash/throttle'
   import ProjectTree from './ProjectTree'
+
+  // jquery-resizable-dom
+  // eslint-disable-next-line
+  $.fn.resizable = function t(d){var h={handleSelector:null,resizeWidth:!0,resizeHeight:!0,resizeWidthFrom:"right",resizeHeightFrom:"bottom",onDragStart:null,onDragEnd:null,onDrag:null,touchActionNone:!0,instanceId:null};return"object"==typeof d&&(h=$.extend(h,d)),this.each(function(){var i,e,r=$.extend({},h);r.instanceId||(r.instanceId="rsz_"+(new Date).getTime());var t,a=$(this);if("destroy"===d){if(!(r=a.data("resizable")))return;return(t=u(r.handleSelector,a)).off("mousedown."+r.instanceId+" touchstart."+r.instanceId),r.touchActionNone&&t.css("touch-action",""),void a.removeClass("resizable")}function n(t){t.stopPropagation(),t.preventDefault()}function o(t){var e,n,o=c(t);e="left"===r.resizeWidthFrom?i.width-o.x+i.x:i.width+o.x-i.x,n="top"===r.resizeHeightFrom?i.height-o.y+i.y:i.height+o.y-i.y,r.onDrag&&!1===r.onDrag(t,a,e,n,r)||(r.resizeHeight&&a.height(n),r.resizeWidth&&a.width(e))}function s(t){return t.stopPropagation(),t.preventDefault(),$(document).off("mousemove."+r.instanceId),$(document).off("mouseup."+r.instanceId),(window.Touch||navigator.maxTouchPoints)&&($(document).off("touchmove."+r.instanceId),$(document).off("touchend."+r.instanceId)),$(document).off("selectstart."+r.instanceId,n),a.css("transition",e),$("iframe").css("pointer-events","auto"),r.onDragEnd&&r.onDragEnd(t,a,r),!1}function c(t){var e={x:0,y:0,width:0,height:0};if("number"==typeof t.clientX)e.x=t.clientX,e.y=t.clientY;else{if(!t.originalEvent.touches)return null;e.x=t.originalEvent.touches[0].clientX,e.y=t.originalEvent.touches[0].clientY}return e}function u(t,e){return t&&">"===t.trim()[0]?(t=t.trim().replace(/^>\s*/,""),e.find(t)):t?e.parent().find(t):e}a.data("resizable",r),t=u(r.handleSelector,a),r.touchActionNone&&t.css("touch-action","none"),a.addClass("resizable"),t.on("mousedown."+r.instanceId+" touchstart."+r.instanceId,function(t){t.preventDefault&&t.preventDefault();if((i=c(t)).width=parseInt(a.width(),10),i.height=parseInt(a.height(),10),e=a.css("transition"),a.css("transition","none"),r.onDragStart&&!1===r.onDragStart(t,a,r))return;$(document).on("mousemove."+r.instanceId,o),$(document).on("mouseup."+r.instanceId,s),(window.Touch||navigator.maxTouchPoints)&&($(document).on("touchmove."+r.instanceId,o),$(document).on("touchend."+r.instanceId,s));$(document).on("selectstart."+r.instanceId,n),$("iframe").css("pointer-events","none")})})};
 
   export default {
     name: 'project-container',

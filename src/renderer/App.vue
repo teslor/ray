@@ -38,6 +38,8 @@
     },
 
     mounted () {
+      this.$nextTick(() => ipc.send('show-window'))
+
       // ********** Global event listeners **********
 
       const fsShortcut = process.platform === 'darwin' ? 'ctrl+command+f' : 'f11'

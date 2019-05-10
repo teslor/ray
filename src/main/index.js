@@ -32,10 +32,10 @@ function createWindow () {
     width: 1200,
     height: 800,
     minWidth: 800,
-    minHeight: 600
-    // webPreferences: {
-    //   devTools: false
-    // }
+    minHeight: 600,
+    webPreferences: {
+      nodeIntegration: true
+    }
   }
 
   const appConfig = global.config
@@ -67,10 +67,6 @@ function createWindow () {
 
   mainWindow.on('closed', () => {
     mainWindow = null
-  })
-
-  mainWindow.once('ready-to-show', () => {
-    mainWindow.show()
   })
 }
 
@@ -109,6 +105,10 @@ app.on('ready', () => {
  */
 
 // ********** Handlers **********
+
+ipc.on('show-window', function (event) {
+  mainWindow.show()
+})
 
 ipc.on('close-window', function (event) {
   mainWindow.allowClose = true
