@@ -152,6 +152,11 @@
       this.$Mousetrap.bindGlobal(['command+shift+e', 'ctrl+shift+e'], () => {
         if (this.allowShortcuts) this.$store.commit('BUS_ADD_MESSAGE', { section: 'file', message: { text: 'show-in-folder' } })
       })
+      this.$Mousetrap.bindGlobal(['esc', 'escape'], () => {
+        if (this.allowShortcuts && this.currentFile.searchMode) {
+          this.$store.commit('FILE_SET_SEARCH_MODE', { fileId: this.currentFile.id, value: false })
+        }
+      })
 
       // Shortcut handlers (editor)
       // Add shortcuts for headers

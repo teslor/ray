@@ -22,7 +22,7 @@
         <h2>Files</h2>
         <p>You can create, open and save files in HTML format. All opened files are shown in the tabs (like in browsers).</p>
         <p>It's also possible to open HTML files created in other programs. In this case files are opened in readonly mode.</p>
-        <p>In Search Mode you can find/replace text in a file (the file is not editable when this mode is active).</p>
+        <p>In Search Mode you can find/replace text in a file (<strong>the file is not editable when Search Mode is active</strong>).</p>
         <p><strong>Note: </strong>If you get an error during opening/saving a file, make sure you have read/write permissions in corresponding location.</p>
         <p class="dh-tips">Tips:</p>
         <ul>
