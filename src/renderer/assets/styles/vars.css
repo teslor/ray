@@ -1,20 +1,12 @@
 :root {
-  --theme-color-1: #3cbef6;
-  --theme-color-1-l98: color(var(--theme-color-1) l(98%));
-  --theme-color-1-l96: color(var(--theme-color-1) l(96%));
-  --theme-color-1-l94: color(var(--theme-color-1) l(94%));
-  --theme-color-1-l90: color(var(--theme-color-1) l(90%));
-  --theme-color-1-l60: color(var(--theme-color-1) l(60%));
-  --theme-color-1-l40: color(var(--theme-color-1) l(40%));
-  --theme-color-2: lightseagreen;
-  --theme-color-3: #ece71f;
-  /*--theme-color-3: #fffa20;*/
-  --border-color-1: #e4e7ed;
-  --border-color-2: #f0f4fd;
-  --bg-color-1: #f5f7fa;
+  --ui-font-family: system-ui, sans-serif;
+  --sidebar-font-family: Roboto, sans-serif;
 
-  --font-family-1: BlinkMacSystemFont, Segoe UI, Oxygen, Ubuntu, Cantarell, Helvetica Neue, sans-serif;
-  --font-family-2: BlinkMacSystemFont, Roboto, sans-serif;
+  --bar-height: 39px;
+  --action-bar-height: var(--bar-height);
+  --sidebar-min-width: 242px;
+  --sidebar-max-width: 600px;
 
-  --sb-min-width: 242px;
+  --toolbar-height: calc(2em + 1px);
+  --toolbar-padding: 3px;
 }

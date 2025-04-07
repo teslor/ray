@@ -1,3 +1,11 @@
+# 1.0.0
+
+- New major features: files encryption, color themes
+- Switch to Tiptap open-source editor
+- UI improvements
+- Performance optimizations
+- Significant code refactoring
+
 # 0.3.0
 
 - Add adjustable autosave option

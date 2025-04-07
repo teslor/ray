@@ -1,0 +1,83 @@
+{
+  "general": {
+    "theme": "Ray",
+    "uiScale": 100
+  },
+  "files": {
+    "autosave": 2,
+    "encryptNewFiles": false,
+    "useSinglePassword": false,
+    "contentWidth": 1000
+  },
+  "editor": {
+    "font": "Roboto",
+    "fontSize": 16,
+    "fontColor": "#444",
+    "useThemeFontColor": true,
+    "backgroundColor": "#f6f6f6",
+    "useThemeBackgroundColor": true,
+    "lineHeight": 1.6,
+    "enableSpellChecker": true,
+    "headings": [
+      "H1",
+      "H2",
+      "H3",
+      "H4",
+      "H5"
+    ],
+    "fonts": [
+      "Arial",
+      "Courier New",
+      "Georgia",
+      "Open Sans",
+      "Roboto",
+      "Times New Roman",
+      "Verdana"
+    ],
+    "fontSizes": [
+      { "name": "Tiny", "size": "62.5%" },
+      { "name": "Small", "size": "75%" },
+      { "name": "Normal", "size": "100%" },
+      { "name": "Large", "size": "125%" },
+      { "name": "Huge", "size": "150%" }
+    ],
+    "textColors": [
+      "#ff9999",
+      "#ffc499",
+      "#ffff99",
+      "#bbff99",
+      "#99eeff",
+      "#ff99ff",
+      "#ff6666",
+      "#ffa666",
+      "#ffff66",
+      "#99ff66",
+      "#66e6ff",
+      "#ff66ff",
+      "#ff3333",
+      "#ff8533",
+      "#ffff33",
+      "#70ff33",
+      "#33e0ff",
+      "#ff33ff",
+      "#000000",
+      "#808080",
+      "#b3b3b3",
+      "#e6e6e6",
+      "#ffffff"
+    ],
+    "highlightColors": [
+      "#ff6666",
+      "#ffa666",
+      "#ffff66",
+      "#99ff66",
+      "#66e6ff",
+      "#ff66ff",
+      "#ffff00",
+      "#00ffff",
+      "#ffffff",
+      "#b3b3b3",
+      "#000000"
+    ]
+  }
+}

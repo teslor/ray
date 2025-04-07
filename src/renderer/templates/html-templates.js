@@ -10,9 +10,9 @@ const base =
 {{ styleExtra }}
 </style>
 </head>
-<body>
-<main class="ray-b">
-{{ contents }}
+<body class="content">
+<main class="ray-c">
+{{ content }}
 </main>
 </body>
 </html>`

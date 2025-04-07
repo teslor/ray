@@ -1,378 +1,245 @@
 <template>
-  <div class="fe-wrapper" ref="ref_wrapper">
-    <div class="fe-bar-container" v-show="file.searchMode">
-      <div class="fe-bar-search">
-        <el-input
-            placeholder="Search" size="mini"
-            ref="ref_input_search"
-            v-model="searchString"
-            clearable>
-        </el-input>
-        <el-checkbox v-model="isMatchCase">Match Case</el-checkbox>
-        <el-checkbox v-model="isReplace">Replace</el-checkbox>
-        <el-tag size="medium" v-show="searchData.finder">{{ searchData.matches }}</el-tag>
+  <div class="file-editor">
+    <div v-show="file.isSearchMode" class="search-bar">
+      <div class="search-panel">
+        <el-input ref="searchInput" v-model="searchString" class="search-input" size="small" placeholder="Search" clearable />
+        <el-input v-model="replaceString" class="search-input" size="small" placeholder="Replace" clearable />
+        <el-button type="primary" size="small" @click="replaceAll">Replace All</el-button>
+        <el-tag v-show="matchCount" class="search-matches" type="success">{{ matchCount }}</el-tag>
       </div>
-      <div class="fe-bar-replace" v-show="isReplace">
-        <el-input
-            placeholder="Replace" size="mini"
-            v-model="replaceString"
-            clearable>
-        </el-input>
-        <el-button type="primary" size="mini" plain @click="handleButtonReplaceAllClick">Replace all</el-button>
+      <div class="options-panel">
+        <el-checkbox v-model="isMatchCase">Match Case</el-checkbox>
       </div>
     </div>
 
-    <div class="fe-editor-container" :style="editorStyle"></div>
+    <file-editor-toolbar
+      v-if="editor"
+      v-show="isToolbarVisible && !file.isSearchMode"
+      :editor="editor"
+      @hyperlink-change="showLinkEditor"
+    />
+    <editor-content :editor="editor" class="content" :style="editorStyle" />
   </div>
 </template>
 
-<script>
-  import { mapState, mapGetters } from 'vuex'
-  import debounce from 'lodash/debounce'
-  import isEqual from 'lodash/isEqual'
-  import Quill from 'quill'
-  import Delta from 'quill-delta'
-  import MagicUrl from 'quill-magic-url'
-  import findAndReplaceDOMText from 'findandreplacedomtext'
-  Quill.register('modules/magicUrl', MagicUrl)
+<script setup>
+import { useTemplateRef, ref, reactive, computed, watch, nextTick, onMounted, onUnmounted  } from 'vue'
+import { useStore } from 'vuex'
+import { ElMessageBox } from 'element-plus'
+import FileEditorToolbar from './FileEditorToolbar.vue'
+import { Editor, EditorContent } from '@tiptap/vue-3'
+import StarterKit from '@tiptap/starter-kit'
+import { Color } from '@tiptap/extension-color'
+import FontFamily from '@tiptap/extension-font-family'
+import Highlight from '@tiptap/extension-highlight'
+import Image from '@tiptap/extension-image'
+import Subscript from '@tiptap/extension-subscript'
+import Superscript from '@tiptap/extension-superscript'
+import TaskItem from '@tiptap/extension-task-item'
+import TaskList from '@tiptap/extension-task-list'
+import TextAlign from '@tiptap/extension-text-align'
+import TextStyle from '@tiptap/extension-text-style'
+import Typography from '@tiptap/extension-typography'
+import Underline from '@tiptap/extension-underline'
+import { ControlClickLink as Link } from './extensions/ControlClickLink'
+import CustomCommands from './extensions/CustomCommands'
+import FontSize from './extensions/FontSize'
+import SearchAndReplace from './extensions/SearchAndReplace'
+import TextTransform from './extensions/TextTransform'
+import { isImageUrl } from '../utils'
+import defaultSettings from '../assets/json/defaultSettings.json'
+const { state, getters, commit } = useStore()
 
-  export default {
-    name: 'file-editor',
+const props = defineProps({
+  file: { type: Object, required: true },
+})
 
-    props: {
-      file: Object,
-      active: Boolean
-    },
+const searchInputRef = useTemplateRef('searchInput')
+const editor = ref(null)
+const updateCounter = reactive({ value: 0, previousValue: 0})
+// Search properties
+const searchString = ref('')
+const replaceString = ref('')
+const matchCount = ref(0)
+const isMatchCase = ref(false)
 
-    data () {
-      return {
-        editor: null,
-        savedUndo: null, // latest undo operation after last file saving (to detect if file is changed)
+const isActive = computed(() => state.currentFile.id === props.file.id)
+const isToolbarVisible = computed(() => state.view.editorToolbar.visible)
+const editorStyle = computed(() => getters.editorStyle)
 
-        // DOM elements
-        editorContainerElement: null,
-        barContainerElement: null,
-        toolbarElement: null,
-        editorElement: null,
+watch(isActive, async (isActive) => {
+  if (!isActive) return
+  await nextTick()
+  if (props.file.isSearchMode) searchInputRef.value.focus()
+  else editor.value.commands.focus()
+}, { immediate: true })
 
-        // Search properties
-        searchString: '',
-        replaceString: '',
-        searchData: {
-          initSelection: 0,
-          initContents: null,
-          finder: null,
-          matches: 0
-        },
-        isMatchCase: false,
-        isReplace: false
-      }
-    },
+watch(() => props.file.savedCounter, () => {
+  updateCounter.value = 0
+})
 
-    computed: {
-      ...mapState({
-        editorSettings: state => state.settings.editor,
-        displayEditorToolbar: state => state.view.editorToolbar.visible
-      }),
-      ...mapGetters([
-        'editorStyle'
-      ])
-    },
-
-    watch: {
-      active: {
-        handler: function (active) {
-          if (!active) return
-          this.$nextTick(() => {
-            if (this.file.searchMode) this.$refs.ref_input_search.focus()
-            else this.editor.focus()
-          })
-        },
-        immediate: true
-      },
-
-      displayEditorToolbar (display) {
-        this.toggleToolbar(display)
-      },
-
-      'file.flags.savedCounter' () {
-        const undoLength = this.editor.history.stack.undo.length
-        this.savedUndo = undoLength > 0 ? this.editor.history.stack.undo[undoLength - 1] : null
-      },
-
-      // ********** Search/replace stuff **********
-
-      'file.searchMode' (searchMode) {
-        if (searchMode) { // search/replace mode is on
-          this.searchData.initSelection = this.editor.getSelection(true).index
-          this.searchData.initContents = this.editor.getContents()
-          this.editor.disable()
-          this.toolbarElement.style.opacity = '0.3'
-          this.$nextTick(() => {
-            this.$refs.ref_input_search.focus()
-          })
-        } else {
-          this.resetSearch()
-          this.searchData.initSelection = 0
-          this.searchData.initContents = null
-          this.editor.enable()
-          this.toolbarElement.style.opacity = ''
-          this.editor.focus()
-        }
-      },
-      searchString () {
-        this.doSearch()
-      },
-      isMatchCase () {
-        this.doSearch()
-      }
-    },
-
-    mounted () {
-      // Create Quill instance
-      const toolbarOptions = {
-        container: [
-          [{ 'header': [1, 2, 3, 4, 5] }],
-          [{ 'font': [] }],
-          [{ 'size': ['small', false, 'large'] }],
-          ['bold', 'italic', 'underline', 'strike'],
-          ['blockquote', 'code-block'],
-          [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'align': [] }],
-          [{ 'script': 'super' }, { 'script': 'sub' }],
-          [{ 'indent': '-1' }, { 'indent': '+1' }],
-          // [{ 'direction': 'rtl' }],
-          [{ 'color': [] }, { 'background': [] }],
-          ['link', 'image', 'video'],
-          ['clean']
-        ]
-      }
-      const options = {
-        placeholder: `Let's type something interesting here...`,
-        theme: 'snow',
-        modules: {
-          toolbar: toolbarOptions,
-          clipboard: {
-            matchVisual: false
-          },
-          history: {
-            delay: 400,
-            maxStack: 400
-          },
-          magicUrl: true
-        }
-      }
-      this.editorContainerElement = this.$refs.ref_wrapper.querySelector('.fe-editor-container')
-      this.editor = new Quill(this.editorContainerElement, options)
-
-      // Initial file data were provided
-      if (this.file.data) {
-        this.loadContents()
-      }
-
-      // Cache additional DOM elements
-      this.barContainerElement = this.$refs.ref_wrapper.querySelector('.fe-bar-container')
-      this.toolbarElement = this.$refs.ref_wrapper.querySelector('.ql-toolbar')
-      this.editorElement = this.$refs.ref_wrapper.querySelector('.ql-editor')
-
-      this.toggleToolbar(this.displayEditorToolbar)
-
-      this.editor.on('text-change', (delta, oldDelta, source) => {
-        const undoLength = this.editor.history.stack.undo.length
-        const lastUndo = undoLength > 0 ? this.editor.history.stack.undo[undoLength - 1] : null
-
-        if ((!this.file.path && this.editor.getLength() === 1) || this.savedUndo === lastUndo) {
-          if (this.file.flags.wasChanged) this.$store.commit('FILE_SET_FLAGS', { fileId: this.file.id, flags: { wasChanged: false } })
-          return
-        }
-        if (!this.file.flags.wasChanged) {
-          this.$store.commit('FILE_SET_FLAGS', { fileId: this.file.id, flags: { wasChanged: true } })
-        }
-      })
-    },
-
-    methods: {
-      loadContents () {
-        this.editor.clipboard.dangerouslyPasteHTML(this.file.data)
-        this.editor.history.clear()
-      },
-
-      toggleToolbar (display) {
-        if (display) this.toolbarElement.classList.remove('d-none')
-        else this.toolbarElement.classList.add('d-none')
-      },
-
-      formatText (format, value) {
-        const range = this.editor.getSelection()
-        const currentFormat = this.editor.getFormat(range)
-        if (currentFormat[format] === value) return
-        this.editor.format(format, value, 'user')
-      },
-
-      removeFormat () {
-        const range = this.editor.getSelection()
-        this.editor.removeFormat(range)
-      },
-
-      transformText (t) {
-        const range = this.editor.getSelection()
-        let text = this.editor.getText(range.index, range.length)
-
-        if (t === 'u') {
-          text = text.toUpperCase()
-        } else if (t === 'l') {
-          text = text.toLowerCase()
-        } else if (t === 's') {
-          text = text.toLowerCase()
-          const separatorList = ['. ', '? ', '! ', '.\n', '?\n', '!\n', '\n']
-          separatorList.forEach(separator => {
-            text = text.split(separator).map(sentence => capitalize(sentence)).join(separator)
-          })
-        } else if (t === 't') {
-          text = text.toLowerCase()
-          text = text.split(' ').map(word => capitalize(word)).join(' ')
-          text = text.split('\n').map(word => capitalize(word)).join('\n')
-        }
-
-        // Create format groups to keep all existing formats
-        let insertions = {
-          text: [],
-          attr: []
-        }
-        let len, format, prevFormat
-        for (let i = range.index, j = 0; i < range.index + range.length; i += 1, j += 1) {
-          len = insertions.attr.length
-          format = this.editor.getFormat(i, 1) // get current character format
-
-          if (len > 0) {
-            prevFormat = insertions.attr[len - 1]
-            if (isEqual(prevFormat, format)) { // format is still the same
-              insertions.text[len - 1] = insertions.text[len - 1] + text[j]
-            } else {
-              insertions.text.push(text[j])
-              insertions.attr.push(format)
-            }
-          } else {
-            insertions.text.push(text[j])
-            insertions.attr.push(format)
-          }
-        }
-
-        const delta = new Delta()
-        delta.retain(range.index).delete(range.length)
-        for (let i = 0; i < insertions.attr.length; i += 1) {
-          delta.insert(insertions.text[i], insertions.attr[i])
-        }
-        this.editor.updateContents(delta)
-
-        function capitalize (s) {
-          return s.charAt(0).toUpperCase() + s.slice(1)
-        }
-      },
-
-      // ********** Search/replace methods **********
-
-      resetSearch () {
-        if (this.searchData.finder &&
-          this.searchData.finder.reverts.length > 0 &&
-          !this.searchData.finder.options.replace) { // there are contents modifications (search highlight); do not revert replace
-          try {
-            this.searchData.finder.revert()
-          } catch (err) { // fallback if an error occurred (restore contents)
-            this.editor.setContents(this.searchData.initContents)
-          }
-        }
-        this.searchData.finder = null
-        if (!this.file.searchMode) this.editor.setSelection(this.searchData.initSelection)
-      },
-      doSearch: debounce(function () {
-        this.resetSearch() // reset previous search
-        if (!this.searchString) return
-
-        this.regexpString = RegExp(this.escapeRegExp(this.searchString), this.isMatchCase ? 'g' : 'gi')
-        this.searchData.finder = findAndReplaceDOMText(this.editorElement, {
-          find: this.regexpString,
-          wrap: 'em',
-          wrapClass: 'markedText',
-          forceContext: function (el) {
-            // Using https://developer.mozilla.org/en-US/docs/Web/API/Element/matches
-            return el.matches('p') || el.matches('li')
-          }
-        })
-        this.searchData.matches = this.searchData.finder.reverts.length
-      }, 500),
-      doReplace () {
-        this.resetSearch() // reset previous search
-        if (!this.searchString || !this.replaceString) return
-
-        this.editor.enable() // keep changes in history
-        this.regexpString = RegExp(this.escapeRegExp(this.searchString), this.isMatchCase ? 'g' : 'gi')
-        this.searchData.finder = findAndReplaceDOMText(this.editorElement, {
-          find: this.regexpString,
-          replace: this.replaceString,
-          forceContext: function (el) {
-            // Using https://developer.mozilla.org/en-US/docs/Web/API/Element/matches
-            return el.matches('p') || el.matches('li')
-          }
-        })
-        this.searchData.matches = this.searchData.finder.reverts.length
-        setTimeout(() => {
-          this.editor.disable()
-        }, 10)
-      },
-      escapeRegExp (s) {
-        return String(s).replace(/([.*+?^=!:${}()|[\]/\\])/g, '\\$1')
-      },
-
-      // ********** Handlers **********
-
-      handleButtonReplaceAllClick () {
-        this.doReplace()
-      }
-    }
+watch(() => props.file.isSearchMode, async (isSearchMode) => {
+  if (isSearchMode) {
+    editor.value.setEditable(false)
+    await nextTick()
+    searchInputRef.value.focus()
+  } else {
+    resetSearch()
+    editor.value.setEditable(true)
+    editor.value.commands.focus()
   }
+})
+
+watch([searchString, isMatchCase], () => {
+  search()
+})
+
+onMounted(() => {
+  editor.value = new Editor({
+    content: props.file.data,
+    extensions: [
+      StarterKit.configure({
+        heading: { levels: Array.from(Array(defaultSettings.editor.headings.length), (_, i) => i + 1) }
+      }),
+      Color,
+      CustomCommands,
+      FontFamily,
+      FontSize,
+      Highlight.configure({ multicolor: true }),
+      Image.configure({ allowBase64: true }),
+      Link.configure({ openOnClick: false }),
+      SearchAndReplace.configure(), // configure() is required for separate storages
+      Subscript,
+      Superscript,
+      TaskList,
+      TaskItem.configure({ nested: true }),
+      TextAlign.configure({ types: ['heading', 'paragraph'] }),
+      TextStyle,
+      TextTransform,
+      Typography,
+      Underline,
+    ],
+    editorProps: {
+      attributes: {
+        class: 'editable',
+      },
+    },
+  })
+  editor.value.on('update', handleContentUpdate)
+  editor.value.commands.focus()
+})
+
+onUnmounted(() => {
+  editor.value.off('update', handleContentUpdate)
+  editor.value.destroy()
+})
+
+function handleContentUpdate({ editor }) {
+  const { eventCount } = editor.state.history$.done
+  const { previousValue } = updateCounter
+  if (eventCount === previousValue) return // group update - do nothing
+  else if (eventCount === previousValue - 1) updateCounter.value -= 1 // undo
+  else updateCounter.value += 1 // update or redo
+  updateCounter.previousValue = eventCount
+
+  const { isEdited } = props.file
+  if (updateCounter.value) {
+    if (!isEdited) commit('FILE_SET_PROPS', { fileId: props.file.id, props: { isEdited: true } })
+  } else {
+    if (isEdited) commit('FILE_SET_PROPS', { fileId: props.file.id, props: { isEdited: false } })
+  }
+}
+
+async function search() {
+  editor.value.commands.setSearchData(searchString.value, isMatchCase.value)
+  await nextTick()
+  matchCount.value = editor.value.storage.searchAndReplace.results.length
+}
+
+function replaceAll() {
+  if (!searchString.value) return
+  editor.value.commands.setReplaceString(replaceString.value)
+  editor.value.commands.replaceAll()
+}
+
+function resetSearch() {
+  searchString.value = ''
+  replaceString.value = ''
+}
+
+function showLinkEditor() {
+  const isActiveLink = editor.value.isActive('link')
+  ElMessageBox.prompt('Hyperlink:', isActiveLink ? 'Edit Hyperlink' : 'Add Hyperlink', {
+    confirmButtonText: isActiveLink ? 'Update' : 'Add',
+    cancelButtonText: 'Cancel',
+    inputValue: isActiveLink ? editor.value.getAttributes('link').href : '',
+  }).then(result => {
+    if (isActiveLink) return editor.value.chain().focus().extendMarkRange('link').updateAttributes('link', { href: result.value }).run()
+    else if (isImageUrl(result.value)) return editor.value.chain().focus().setImage({ src: result.value }).run()
+    if (editor.value.view.state.selection.empty) editor.value.commands.selectParentNode()
+    editor.value.chain().focus().setLink({ href: result.value }).run()
+  }).catch(() => {
+    editor.value.commands.focus()
+  })
+}
+
+defineExpose({
+  file: props.file,
+  isActive,
+  editor,
+  showLinkEditor
+})
 </script>
 
-<style>
-  .fe-wrapper {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-  }
+<style scoped>
+.file-editor {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
-  .fe-bar-container {
-    margin-top: 2px;
+.search-bar {
+  --gap: var(--toolbar-padding);
 
-    & .el-input {
-      width: 40%;
-      margin-right: 4px;
-    }
+  height: var(--toolbar-height);
+  display: flex;
+  align-items: center;
+  padding: 0 10px 0 var(--gap);
+  border-bottom: 1px solid var(--ui-border-color);
+}
 
-    & .el-checkbox, & .el-tag {
-      margin-left: 12px;
-    }
+.search-panel, .options-panel {
+  display: flex;
+  align-items: center;
+}
 
-    & .el-checkbox {
-      font-weight: normal;
-    }
+.search-panel {
+  flex: 1
+}
 
-    & >>> .el-checkbox__label {
-      font-size: 12px;
-      padding-left: 8px;
-    }
+.options-panel {
+  flex-shrink: 0;
+  margin-left: auto;
+}
 
-    & .el-tag {
-      font-size: 14px;
-    }
-  }
+.search-input {
+  max-width: 30%;
+  margin-right: var(--gap);
+}
 
-  .fe-bar-search, .fe-bar-replace {
-    display: flex;
-    align-items: center;
-    padding: 2px 4px;
-  }
+.search-matches {
+  margin-left: var(--gap);
+  font-size: 1em;
+}
 
-  .fe-editor-container {
-    overflow: auto;
-    flex: 1;
-  }
+.content {
+  overflow: auto;
+  flex: 1;
+  padding: 12px 16px;
+}
+
+.content :deep(.editable) {
+  outline: none;
+  min-height: 100%;
+}
 </style>

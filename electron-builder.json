@@ -1,0 +1,37 @@
+{
+  "appId": "com.electron.ray",
+  "directories": {
+    "output": "dist"
+  },
+  "win": {
+    "target": "nsis",
+    "icon": "icon.ico"
+  },
+  "mac": {
+    "icon": "icon.png"
+  },
+  "linux":  {
+    "target": ["snap"]
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": "always"
+  },
+  "files": [
+    {
+      "from": "build",
+      "to": ".",
+      "filter": ["**/*"]
+    },
+    {
+      "from": "src/main/static",
+      "to": "static",
+      "filter": ["**/*"]
+    },
+    "package.json",
+    "!node_modules/**/{CONTRIBUTING.md,CHANGELOG.md,README.md,README,readme.md,readme}",
+    "!node_modules/**/{src,demo,test,__tests__,tests,powered-test,example,examples}",
+    "!node_modules/**/*.map"
+  ]
+}

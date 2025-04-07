@@ -1,0 +1,93 @@
+.content {
+  h1, h2, h3, h4, h5, h6, p, ol, ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  h1 {
+    font-size: 2em;
+  }
+
+  h2 {
+    font-size: 1.6em;
+  }
+
+  h3 {
+    font-size: 1.3em;
+  }
+
+  h4 {
+    font-size: 1.1em;
+  }
+
+  h5 {
+    font-size: 0.95em;
+  }
+
+  ol, ul {
+    padding-left: 2.5em;
+  }
+
+  ul[data-type="taskList"] {
+    list-style: none;
+
+    li {
+      display: flex;
+      margin-left: -1.5em;
+    }
+
+    li label {
+      flex: 0 0 auto;
+      margin-right: 0.5em;
+      user-select: none;
+    }
+
+    li span {
+      display: inline-block;
+      position: relative;
+      height: 1em;
+      width: 1em;
+      transform: translateY(0.15em);
+      border: none;
+      border-radius: 0.2em;
+    }
+
+    li[data-checked="true"] span::before {
+      position: absolute;
+      top: -0.1em;
+      left: 0.25em;
+      content: '\2714';
+      font-size: 0.8em;
+      font-weight: bold;
+    }
+
+    li input {
+      display: none;
+    }
+
+    li div {
+      flex: 1 1 auto;
+      cursor: text;
+    }
+  }
+
+  pre {
+    border-radius: 3px;
+    margin: 5px 0;
+    padding: 5px 10px;
+  }
+
+  blockquote {
+    margin: 5px 0 5px;
+    padding: 0 0 0 16px;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}

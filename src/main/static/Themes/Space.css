@@ -1,0 +1,125 @@
+:root {
+  /* General */
+
+  --ui-color-primary: #aa73d1;
+  --ui-color-secondary: #7938a8;
+  --ui-color-accent: #b2ebd6;
+  --ui-bg-color-base: #17171f;
+  --ui-bg-color-primary: #4d334d;
+  --ui-bg-color-secondary: #241524;
+  --ui-border-color: #2d2238;
+
+  /* Elements */
+
+  --window-bg-color: var(--ui-bg-color-primary);
+
+  --scrollbar-color: #2d2d38;
+  --scrollbar-bg-color: #1A1428;
+
+  --element-text-color-primary: #eee;
+  --element-text-color-regular: #ddd;
+
+  --element-bg-color: var(--ui-bg-color-base);
+  --element-bg-color-primary: #7f578c;
+  --element-border-color: #3A2F56;
+  --element-text-color: var(--element-text-color-regular);
+  --element-active-bg-color: var(--ui-color-secondary);
+  --element-active-border-color: #1A1428;
+  --element-active-text-color: var(--element-text-color);
+  --element-disabled-bg-color: var(--element-bg-color);
+  --element-disabled-border-color: var(--ui-border-color);
+  --element-disabled-text-color: #666;
+  --element-placeholder-color: #bbb;
+
+  --element-color-success: #4c8c2b;
+  --element-text-color-success: white;
+  --element-bg-color-success: var(--element-color-success);
+  --element-border-color-success: var(--element-color-success);
+  --element-active-bg-color-success: #95d475;
+  --element-active-border-color-success: var(--element-active-bg-color-success);
+  --element-active-text-color-success: var(--element-text-color-success);
+  --tag-bg-color-success: #e5fadc;
+  --tag-border-color-success: var(--element-color-success);
+
+  --element-color-caution: #b34f4f;
+  --element-text-color-caution: white;
+  --element-bg-color-caution: var(--element-color-caution);
+  --element-border-color-caution: var(--element-color-caution);
+  --element-active-bg-color-caution: #f89898;
+  --element-active-border-color-caution: var(--element-active-bg-color-caution);
+  --element-active-text-color-caution: var(--element-text-color-caution);
+
+  --select-focus-border-color: var(--ui-color-primary);
+  --popup-shadow: 0px 0px 12px rgba(255, 255, 255, 0.05);
+}
+
+/* Action bar (top toolbar) */
+
+.action-bar {
+  --bg-color: var(--ui-bg-color-primary);
+  --border-color: var(--ui-bg-color-primary);
+  --button-bg-color: var(--element-bg-color-primary);
+  --button-border-color: var(--ui-border-color);
+  --button-text-color: #eee;
+  --button-hover-bg-color: var(--ui-color-secondary);
+  --button-disabled-bg-color: var(--element-bg-color-primary);
+  --button-disabled-text-color: #888;
+  --button-highlight-color: #6fb383;
+}
+
+/* Project sidebar */
+
+.project-sidebar {
+  --title-bg: var(--ui-bg-color-base);
+  --title-color: var(--ui-color-primary);
+  --tree-bg: linear-gradient(180deg, #080609 0%, #1A1428 100%);
+  --folder-text-color: var(--element-text-color-primary);
+  --file-text-color: var(--element-text-color-primary);
+}
+
+.ray-icon-folder:before {
+  color: #cc5d3b;
+}
+.ray-icon-file:before {
+  color: var(--element-bg-color-primary);
+}
+
+/* Editor toolbar */
+
+.file-editor-toolbar {
+  --bg-color: var(--ui-bg-color-base);
+  --border-color: var(--ui-border-color);
+}
+
+/* Editor content */
+
+.content {
+  color: #eee;
+  background: #14101c;
+
+  ul[data-type="taskList"] {
+    li span {
+      background-color: #e4e7ed;
+    }
+  }
+
+  pre {
+    color: #f8f8f2;
+    background-color: #777;
+  }
+
+  blockquote {
+    border-left: 4px solid #ccc;
+  }
+
+  a {
+    color: #54aaff;
+  }
+
+  a[href^="https://stackoverflow.com"] { color: #f48024; }
+  a[href^="https://www.youtube.com"] { color: #ff0000; }
+
+  .search-match {
+    background-color: #f03e3e;
+  }
+}
