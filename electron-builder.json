@@ -5,10 +5,11 @@
   },
   "win": {
     "target": "nsis",
-    "icon": "icon.ico"
+    "icon": "static/icons/win.ico"
   },
   "mac": {
-    "icon": "icon.png"
+    "category": "public.app-category.productivity",
+    "icon": "static/icons/mac.png"
   },
   "linux":  {
     "target": ["snap"]
