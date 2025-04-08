@@ -263,7 +263,7 @@ ipcMain.on('open-file-dialog', (event, payload) => {
   dialog.showOpenDialog({
     properties: ['openFile', 'multiSelections'],
     filters: [
-      { name: 'HTML files', extensions: ['html', 'htm', 'htmr'] }
+      { name: 'HTML files', extensions: ['html', 'htmr'] }
     ],
     defaultPath: appState.currentFileDir
   }).then(({ filePaths}) => {
@@ -303,6 +303,8 @@ ipcMain.on('save-file-dialog', (event, payload = {}) => {
     defaultPath
   }
   dialog.showSaveDialog(options).then(({ filePath }) => {
-    if (filePath) event.sender.send('save-file', { filePath })
+    if (!filePath) return
+    if (!filePath.endsWith(ext)) filePath = `${filePath}.${ext}`
+    event.sender.send('save-file', { filePath })
   })
 })
