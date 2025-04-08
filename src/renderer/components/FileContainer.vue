@@ -187,6 +187,7 @@ function saveCurrentFile({ asNew = false, ext } = {}) {
 
   const newPath = path && ext ? `${path.slice(0, -4)}${ext}` : path
   if (!asNew && !isEdited && path && path === newPath) {
+    commit('BUS_ADD_MESSAGE', { section: 'notification', message: { text: 'File has no changes to save' } })
     return // same path & no changes of content or format -> saving is not required
   }
 
@@ -218,6 +219,10 @@ function saveAllFiles() {
 }
 
 function renameCurrentFile() {
+  if (!currentFile.value.path) {
+    commit('BUS_ADD_MESSAGE', { section: 'notification', message: { text: 'To rename a file, it should be saved first' } })
+    return
+  }
   ElMessageBox.prompt('', 'Rename File', {
     confirmButtonText: 'OK',
     cancelButtonText: 'Cancel',

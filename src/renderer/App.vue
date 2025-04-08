@@ -26,14 +26,14 @@ const $Mousetrap = inject('$Mousetrap')
 const generalSettings = computed(() => state.settings.general)
 const editorSettings = computed(() => state.settings.editor)
 
-watch(() => state.bus.notification, (message) => {
+watch(() => state.bus.notification, ({ text, type }) => {
   ElMessage({
-    message: Array.isArray(message.text) ? h('p', null, [
-      h('span', null, message.text[0]),
+    message: Array.isArray(text) ? h('p', null, [
+      h('span', null, text[0]),
       h('br', null),
-      h('b', null, message.text[1]),
-    ]) : message.text,
-    type: message.type ? message.type : 'info',
+      h('b', null, text[1]),
+    ]) : text,
+    type: type || 'info',
     duration: 5000
   })
 })

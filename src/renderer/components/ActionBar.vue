@@ -72,7 +72,7 @@
           @click="renameFile"
           @command="handleEncryptClick"
         >
-          <icon-file-pencil :disabled="!currentFile .path" :size="iconSize" :stroke="iconStroke" />
+          <icon-file-pencil :size="iconSize" :stroke="iconStroke" />
 
           <template #dropdown>
             <el-dropdown-menu>
