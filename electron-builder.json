@@ -9,7 +9,7 @@
   },
   "mac": {
     "category": "public.app-category.productivity",
-    "icon": "static/icons/mac.png"
+    "icon": "static/icons/mac.icns"
   },
   "linux":  {
     "target": ["snap"]
