@@ -197,7 +197,7 @@ function handleSelectionUpdate({ editor }) {
   // Font style
   if (editor.isActive('textStyle')) {
     const textStyle = editor.getAttributes('textStyle')
-    font.value = textStyle.fontFamily || editorFont.value
+    font.value = textStyle.fontFamily?.replaceAll('"', '') || editorFont.value
     fontSize.value = textStyle.fontSize || defaultFontSize
     textColor.value = textStyle.color || ''
   } else {

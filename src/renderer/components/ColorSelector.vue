@@ -14,7 +14,7 @@
     <div
       v-for="color in [...colors, '']"
       :key="color"
-      :class="['color-tile', { 'is-active': activeColor === color}]"
+      :class="['color-tile', { 'is-active': rgbToHex(activeColor) === color }]"
       :style="color ? { backgroundColor: color } : {}"
       @click="selectColor(color)"
     >
@@ -39,6 +39,11 @@ const isVisible = ref(false)
 
 const selectorStyle = computed(() => ({ width: `${props.rowLength * 1.25 + 0.25 * (props.rowLength + 1)}em` }))
 
+function rgbToHex(color) {
+  if (!color.startsWith('rgb')) return color
+  return '#' + color.match(/\d+/g).map(x => Number(x).toString(16).padStart(2, '0')).join('')
+}
+
 function selectColor(color) {
   isVisible.value = false
   if (color !== props.activeColor) emit('select', color)
@@ -56,11 +61,11 @@ function selectColor(color) {
   height: 1.25em;
   margin-right: 0.25em;
   margin-bottom: 0.25em;
-  border: 1px solid var(--ui-border-color);
+  border: 1px dashed var(--ui-border-color);
   text-align: center;
 
   &.is-active {
-    border: 1px solid var(--ui-color-primary);
+    border: 2px solid var(--ui-color-primary);
   }
 }
 
