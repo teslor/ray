@@ -26,7 +26,7 @@ Create, style and organize your personal notes!
 * Many formatting/styling options
 
 ### :surfer: Platforms
-At this moment you can download the distributive for Windows and macOS.
+For now, you can [download](https://github.com/teslor/ray/releases/latest) the app for macOS (Apple M) and Windows.
 
 ### :pushpin: Next Features
 * More fonts & formatting options
