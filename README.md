@@ -1,32 +1,31 @@
 <p align="center">
-  <img src="/icon.ico" alt="Ray Logo" width="128" height="auto">
+  <img src="/static/icon.ico" alt="Ray Logo" width="128" height="auto">
 </p>
 <h1 align="center">Ray</h1>
 <p align="center">
-Ray is a desktop HTML text editor with advanced features.
+HTML text editor with a focus on privacy.
 <br>
 Create, style and organize your personal notes!
 </p>
 <img src="https://img.shields.io/badge/version-1.0.0-green.svg" alt="v1.0.0">
 <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license">
 
-![Main Screenshot](/static/screenshots/mac.png)
+![Main Screenshot](/static/app.png)
 
 ### :zap: Overview
 <p>Ray is designed for creating and organizing personal text documents such as notes, thoughts, ideas and so on.</p>
-<p>You can use it as a replacement for simple text editors (e.g. included in your OS) and note-taking apps. You get such benefits as advanced styling and file organizing features to have quick access to all your files.</p>
-<p>It's perfect for medium and small text documents, offering a good alternative to the big word processing apps like Google Docs or MS Word.</p>
+<p>Any files you make are stored right on your local device, so you don't need to sign in to any services.</p>
+<p>It's perfect for medium and small text documents, offering a great alternative to the other word processing or note-taking apps.</p>
 
 ### :trophy: Key Features
 * Completely free and open sourced
 * Customizable UI and color themes
 * Common HTML format to store files
-* File encryption for private data
+* Optional encryption for private data
 * Grouping files into projects
 * Many formatting/styling options
 
 ### :surfer: Platforms
-Ray is based on [Electron](https://www.electronjs.org/) project and can be run on macOS, Windows, and Linux.
 At this moment you can download the distributive for Windows and macOS.
 
 ### :pushpin: Next Features
