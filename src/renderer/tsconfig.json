@@ -12,7 +12,8 @@
     "lib": ["esnext", "dom"],
     "types": ["vite/client", "element-plus/global"],
     "allowJs": true,
-    "noImplicitAny": false,
+    "noEmit": true,
+    "noImplicitAny": false
   },
   "include": ["./**/*.js", "./**/*.ts", "./**/*.d.ts", "./**/*.tsx", "./**/*.vue"],
 }
