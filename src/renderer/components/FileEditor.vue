@@ -5,7 +5,7 @@
         <el-input ref="searchInput" v-model="searchString" class="search-input" size="small" placeholder="Search" clearable />
         <el-input v-model="replaceString" class="search-input" size="small" placeholder="Replace" clearable />
         <el-button type="primary" size="small" @click="replaceAll">Replace All</el-button>
-        <el-tag v-show="matchCount" class="search-matches" type="success">{{ matchCount }}</el-tag>
+        <el-tag v-show="searchString" class="search-matches" type="success">{{ matchCount }}</el-tag>
       </div>
       <div class="options-panel">
         <el-checkbox v-model="isMatchCase">Match Case</el-checkbox>
@@ -80,12 +80,10 @@ watch(() => props.file.savedCounter, () => {
 
 watch(() => props.file.isSearchMode, async (isSearchMode) => {
   if (isSearchMode) {
-    editor.value.setEditable(false)
     await nextTick()
     searchInputRef.value.focus()
   } else {
     resetSearch()
-    editor.value.setEditable(true)
     editor.value.commands.focus()
   }
 })
@@ -137,6 +135,7 @@ onUnmounted(() => {
 function handleContentUpdate({ editor }) {
   const { eventCount } = editor.state.history$.done
   const { previousValue } = updateCounter
+
   if (eventCount === previousValue) return // group update - do nothing
   else if (eventCount === previousValue - 1) updateCounter.value -= 1 // undo
   else updateCounter.value += 1 // update or redo
@@ -148,6 +147,8 @@ function handleContentUpdate({ editor }) {
   } else {
     if (isEdited) commit('FILE_SET_PROPS', { fileId: props.file.id, props: { isEdited: false } })
   }
+
+  if (props.file.isSearchMode) search() // update search
 }
 
 async function search() {
@@ -230,6 +231,7 @@ defineExpose({
 .search-matches {
   margin-left: var(--gap);
   font-size: 1em;
+  font-weight: 500;
 }
 
 .content {

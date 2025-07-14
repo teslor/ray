@@ -22,9 +22,11 @@
         <p>* - What You See Is What You Get</p>
 
         <h2>Files</h2>
-        <p>You can create, open and save files in HTML format. All open files are displayed in tabs (as in browsers).</p>
-        <p>It's also possible to open HTML files created in other applications. In this case, the files are opened in read-only mode.</p>
-        <p>In Search Mode, you can find/replace text in a file (<strong>the file is not editable when Search Mode is active</strong>).</p>
+        <p>
+          You can create, open and save files in HTML format. All open files are displayed in tabs (as in browsers).
+          It's also possible to open HTML files created in other applications. In this case, the files are opened in read-only mode.
+        </p>
+        <p>Search Mode lets you quickly find and replace text in your file.</p>
         <p><strong>Note: </strong>If you get an error when opening/saving a file, make sure you have read/write permissions to the directory.</p>
         <p class="tips-caption">Tips:</p>
         <ul>
@@ -188,7 +190,7 @@ const shortcuts = [
       { keys: ['F9'], text: 'Show Settings', icon: IconSettings },
       { keys: isMac() ? [`Ctrl + ${modKey} + F`] : ['F11'], text: 'Toggle Fullscreen Mode' },
       { keys: ['F12'], text: 'Show/Hide All Toolbars' },
-      { keys: ['Esc'], text: 'Close Dialog, Exit Search Mode' },
+      { keys: ['Esc'], text: 'Close Dialog, Hide Search Panel' },
       { keys: [`${modKey} + (=)`, `${modKey} + (-)`], text: 'Zoom In/Out by 5%' },
       { keys: [`${modKey} + 0`], text: 'Reset Zoom' },
     ]
