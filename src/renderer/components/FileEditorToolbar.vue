@@ -55,6 +55,24 @@
     </el-button-group>
 
     <el-button-group class="button-group" size="small">
+      <el-button :class="{ 'is-active': editor.isActive('bulletList') }" @click="editor.chain().focus().toggleBulletList().run()">
+        <icon-list :size="iconSize" :stroke="iconStroke" />
+      </el-button>
+      <el-button :class="{ 'is-active': editor.isActive('orderedList') }" @click="editor.chain().focus().toggleOrderedList().run()">
+        <icon-list-numbers :size="iconSize" :stroke="iconStroke" />
+      </el-button>
+      <el-button :class="{ 'is-active': editor.isActive('taskList') }" @click="editor.chain().focus().toggleTaskList().run()">
+        <icon-list-check :size="iconSize" :stroke="iconStroke" />
+      </el-button>
+      <el-button :disabled="!editor.can().sinkListItem('listItem') && !editor.can().sinkListItem('taskItem')" @click="editor.chain().focus().sinkItem().run()">
+        <icon-indent-increase :size="iconSize" :stroke="iconStroke" />
+      </el-button>
+      <el-button :disabled="!editor.can().liftListItem('listItem') && !editor.can().liftListItem('taskItem')" @click="editor.chain().focus().liftItem().run()">
+        <icon-indent-decrease :size="iconSize" :stroke="iconStroke" />
+      </el-button>
+    </el-button-group>
+
+    <el-button-group class="button-group" size="small">
       <el-button :class="{ 'is-active': editor.isActive({ textAlign: 'left' }) }" @click="editor.chain().focus().setTextAlign('left').run()">
         <icon-align-left :size="iconSize" :stroke="iconStroke" />
       </el-button>
@@ -66,24 +84,6 @@
       </el-button>
       <el-button :class="{ 'is-active': editor.isActive({ textAlign: 'justify' }) }" @click="editor.chain().focus().setTextAlign('justify').run()">
         <icon-align-justified :size="iconSize" :stroke="iconStroke" />
-      </el-button>
-    </el-button-group>
-
-    <el-button-group class="button-group" size="small">
-      <el-button :class="{ 'is-active': editor.isActive('taskList') }" @click="editor.chain().focus().toggleTaskList().run()">
-        <icon-list-check :size="iconSize" :stroke="iconStroke" />
-      </el-button>
-      <el-button :class="{ 'is-active': editor.isActive('bulletList') }" @click="editor.chain().focus().toggleBulletList().run()">
-        <icon-list :size="iconSize" :stroke="iconStroke" />
-      </el-button>
-      <el-button :class="{ 'is-active': editor.isActive('orderedList') }" @click="editor.chain().focus().toggleOrderedList().run()">
-        <icon-list-numbers :size="iconSize" :stroke="iconStroke" />
-      </el-button>
-      <el-button :disabled="!editor.can().sinkListItem('listItem') && !editor.can().sinkListItem('taskItem')" @click="editor.chain().focus().sinkItem().run()">
-        <icon-indent-increase :size="iconSize" :stroke="iconStroke" />
-      </el-button>
-      <el-button :disabled="!editor.can().liftListItem('listItem') && !editor.can().liftListItem('taskItem')" @click="editor.chain().focus().liftItem().run()">
-        <icon-indent-decrease :size="iconSize" :stroke="iconStroke" />
       </el-button>
     </el-button-group>
 
