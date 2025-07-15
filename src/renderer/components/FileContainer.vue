@@ -275,7 +275,8 @@ function closeFile(file) {
   left: 0;
   right: 0;
   height: 2px;
-  opacity: 0.4;
+  background-color: var(--ui-color-accent);
+  opacity: 0.5;
 }
 
 .file-encrypted-mark {
@@ -349,9 +350,11 @@ function closeFile(file) {
 
   .el-tabs__item.is-active, .el-tabs__item:hover {
     color: var(--ui-color-accent) !important;
+  }
 
+  .el-tabs__item:not(.is-active) {
     .file-changed-mark {
-      background-color: var(--ui-color-accent);
+      opacity: 0.2;
     }
   }
 }
