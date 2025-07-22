@@ -29,21 +29,16 @@ import { ElMessageBox } from 'element-plus'
 import FileEditorToolbar from './FileEditorToolbar.vue'
 import { Editor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
-import { Color } from '@tiptap/extension-color'
-import FontFamily from '@tiptap/extension-font-family'
+import { Color, FontFamily, FontSize, TextStyle } from '@tiptap/extension-text-style'
 import Highlight from '@tiptap/extension-highlight'
 import Image from '@tiptap/extension-image'
 import Subscript from '@tiptap/extension-subscript'
 import Superscript from '@tiptap/extension-superscript'
-import TaskItem from '@tiptap/extension-task-item'
-import TaskList from '@tiptap/extension-task-list'
+import { TaskItem, TaskList } from '@tiptap/extension-list'
 import TextAlign from '@tiptap/extension-text-align'
-import TextStyle from '@tiptap/extension-text-style'
 import Typography from '@tiptap/extension-typography'
-import Underline from '@tiptap/extension-underline'
 import { ControlClickLink as Link } from './extensions/ControlClickLink'
 import CustomCommands from './extensions/CustomCommands'
-import FontSize from './extensions/FontSize'
 import SearchAndReplace from './extensions/SearchAndReplace'
 import TextTransform from './extensions/TextTransform'
 import { isImageUrl } from '../utils'
@@ -97,7 +92,9 @@ onMounted(() => {
     content: props.file.data,
     extensions: [
       StarterKit.configure({
-        heading: { levels: Array.from(Array(defaultSettings.editor.headings.length), (_, i) => i + 1) }
+        heading: { levels: Array.from(Array(defaultSettings.editor.headings.length), (_, i) => i + 1) },
+        trailingNode: false,
+        link: false,
       }),
       Color,
       CustomCommands,
@@ -115,7 +112,6 @@ onMounted(() => {
       TextStyle,
       TextTransform,
       Typography,
-      Underline,
     ],
     editorProps: {
       attributes: {
