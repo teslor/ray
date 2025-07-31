@@ -19,7 +19,7 @@ const state = {
   bus: {
     project: null, // possible actions: create, rename, delete, save-all
     file: null, // possible actions: open, save, save-as, save-all, rename, show-in-folder
-    editor: null, // possible actions: focus
+    editor: null, // possible actions: focus, start-search, stop-search
     modal: null, // possible actions: password
     notification: null
   },
@@ -184,16 +184,6 @@ const mutations = {
   [types.FILE_DELETE_RECENT](state, filePath) {
     const i = state.recentFiles.findIndex(file => file.path === filePath)
     if (i !== -1) state.recentFiles.splice(i, 1)
-  },
-
-  [types.FILE_SET_SEARCH_MODE](state, { fileId, value }) {
-    const i = state.activeFiles.findIndex(file => file.id === fileId)
-
-    if (value === undefined) { // toggle
-      state.activeFiles[i].isSearchMode = !state.activeFiles[i].isSearchMode
-    } else {
-      state.activeFiles[i].isSearchMode = value
-    }
   },
 
   [types.FILE_SET_PROPS](state, { fileId, props }) {
@@ -434,7 +424,6 @@ const actions = {
       dataType: isNew ? 'c' : null,
       isReady: isNew,
       isEdited: false,
-      isSearchMode: false,
       isEncrypted: filePath.endsWith('.htmr'),
       password: '',
       savedCounter: 0

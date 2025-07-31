@@ -1,6 +1,6 @@
 <template>
   <div class="file-editor">
-    <div v-show="file.isSearchMode" class="search-bar">
+    <div v-show="isSearchMode" class="search-bar">
       <div class="search-panel">
         <el-input ref="searchInput" v-model="searchString" class="search-input" size="small" placeholder="Search" clearable />
         <el-input v-model="replaceString" class="search-input" size="small" placeholder="Replace" clearable />
@@ -14,7 +14,7 @@
 
     <file-editor-toolbar
       v-if="editor"
-      v-show="isToolbarVisible && !file.isSearchMode"
+      v-show="isToolbarVisible && !isSearchMode"
       :editor="editor"
       @hyperlink-change="showLinkEditor"
     />
@@ -53,6 +53,7 @@ const searchInputRef = useTemplateRef('searchInput')
 const editor = ref(null)
 const updateCounter = reactive({ value: 0, previousValue: 0})
 // Search properties
+const isSearchMode = ref(false)
 const searchString = ref('')
 const replaceString = ref('')
 const matchCount = ref(0)
@@ -65,22 +66,12 @@ const editorStyle = computed(() => getters.editorStyle)
 watch(isActive, async (isActive) => {
   if (!isActive) return
   await nextTick()
-  if (props.file.isSearchMode) searchInputRef.value.focus()
+  if (isSearchMode.value) searchInputRef.value.focus()
   else editor.value.commands.focus()
 }, { immediate: true })
 
 watch(() => props.file.savedCounter, () => {
   updateCounter.value = 0
-})
-
-watch(() => props.file.isSearchMode, async (isSearchMode) => {
-  if (isSearchMode) {
-    await nextTick()
-    searchInputRef.value.focus()
-  } else {
-    resetSearch()
-    editor.value.commands.focus()
-  }
 })
 
 watch([searchString, isMatchCase], () => {
@@ -144,7 +135,7 @@ function handleContentUpdate({ editor }) {
     if (isEdited) commit('FILE_SET_PROPS', { fileId: props.file.id, props: { isEdited: false } })
   }
 
-  if (props.file.isSearchMode) search() // update search
+  if (isSearchMode.value) search() // update search
 }
 
 async function search() {
@@ -153,15 +144,25 @@ async function search() {
   matchCount.value = editor.value.storage.searchAndReplace.results.length
 }
 
+async function startSearch() {
+  isSearchMode.value = true
+  const { from, to } = editor.value.state.selection
+  searchString.value = editor.value.state.doc.textBetween(from, to, ' ') || ''
+  await nextTick()
+  searchInputRef.value.focus()
+}
+
+function stopSearch() {
+  isSearchMode.value = false
+  searchString.value = ''
+  replaceString.value = ''
+  editor.value.commands.focus()
+}
+
 function replaceAll() {
   if (!searchString.value) return
   editor.value.commands.setReplaceString(replaceString.value)
   editor.value.commands.replaceAll()
-}
-
-function resetSearch() {
-  searchString.value = ''
-  replaceString.value = ''
 }
 
 function showLinkEditor() {
@@ -184,7 +185,9 @@ defineExpose({
   file: props.file,
   isActive,
   editor,
-  showLinkEditor
+  startSearch,
+  stopSearch,
+  showLinkEditor,
 })
 </script>
 
@@ -220,7 +223,7 @@ defineExpose({
 }
 
 .search-input {
-  max-width: 30%;
+  max-width: 25%;
   margin-right: var(--gap);
 }
 

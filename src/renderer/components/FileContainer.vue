@@ -83,7 +83,15 @@ watch(busMessageFile, (message) => {
 
 watch(busMessageEditor, (message) => {
   switch (message.text) {
-    case 'focus': getActiveEditorComponent().editor.commands.focus()
+    case 'focus':
+      getActiveEditorComponent().editor.commands.focus()
+      break
+    case 'start-search':
+      getActiveEditorComponent().startSearch()
+      break
+    case 'stop-search':
+      getActiveEditorComponent().stopSearch()
+      break
   }
 })
 
@@ -156,13 +164,11 @@ $Mousetrap.bindGlobal(['mod+alt+e'], () => {
   if (allowShortcuts.value) commit('BUS_ADD_MESSAGE', { section: 'file', message: { text: 'show-in-folder' } })
 })
 $Mousetrap.bindGlobal(['esc', 'escape'], () => {
-  if (allowShortcuts.value && currentFile.value.isSearchMode) {
-    commit('FILE_SET_SEARCH_MODE', { fileId: currentFile.value.id, value: false })
-  }
+  if (allowShortcuts.value) commit('BUS_ADD_MESSAGE', { section: 'editor', message: { text: 'stop-search' } })
 })
 // Editor shortcut handlers
 $Mousetrap.bindGlobal(['mod+f'], () => {
-  if (allowShortcuts.value && currentFile.value.dataType) commit('FILE_SET_SEARCH_MODE', { fileId: currentFile.value.id })
+  if (allowShortcuts.value && currentFile.value.dataType) commit('BUS_ADD_MESSAGE', { section: 'editor', message: { text: 'start-search' } })
 })
 $Mousetrap.bindGlobal(['mod+k'], () => {
   if (allowShortcuts.value) getActiveEditorComponent().showLinkEditor()

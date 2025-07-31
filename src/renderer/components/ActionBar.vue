@@ -82,7 +82,7 @@
           </template>
         </el-dropdown>
 
-        <el-button v-show="currentFile.dataType || !currentFile.isReady" class="bar-button" :class="{ highlighted: currentFile.isSearchMode }" @click="toggleSearch">
+        <el-button v-show="currentFile.dataType || !currentFile.isReady" class="bar-button" @click="startSearch">
           <icon-search :size="iconSize" :stroke="iconStroke" />
         </el-button>
       </div>
@@ -160,8 +160,8 @@ function addFileToProject() {
 function showFileInExplorer() {
   commit('BUS_ADD_MESSAGE', { section: 'file', message: { text: 'show-in-folder' } })
 }
-function toggleSearch() {
-  commit('FILE_SET_SEARCH_MODE', { fileId: currentFile.value.id })
+function startSearch() {
+  commit('BUS_ADD_MESSAGE', { section: 'editor', message: { text: 'start-search' } })
 }
 function showSettingsDialog() {
   commit('VIEW_TOGGLE_DIALOG_SETTINGS', true)
