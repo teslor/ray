@@ -122,4 +122,8 @@
   .search-match {
     background-color: #f03e3e;
   }
+
+  .search-match-active {
+    background-color: #b92a2a;
+  }
 }

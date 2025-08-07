@@ -2,10 +2,22 @@
   <div class="file-editor">
     <div v-show="isSearchMode" class="search-bar">
       <div class="search-panel">
-        <el-input ref="searchInput" v-model="searchString" class="search-input" size="small" placeholder="Search" clearable />
+        <el-input
+          ref="searchInput"
+          v-model="searchString"
+          class="search-input"
+          size="small"
+          placeholder="Search"
+          clearable
+          @keydown="goNextMatch"
+        />
         <el-input v-model="replaceString" class="search-input" size="small" placeholder="Replace" clearable />
         <el-button type="primary" size="small" @click="replaceAll">Replace All</el-button>
-        <el-tag v-show="searchString" class="search-matches" type="success">{{ matchCount }}</el-tag>
+        <el-button size="small" :icon="ArrowUp" class="arrow-button" :disabled="!matchCount" @click="goPreviousMatch" />
+        <el-button size="small" :icon="ArrowDown" class="arrow-button" :disabled="!matchCount" @click="goNextMatch" />
+        <el-tag v-show="searchString" class="search-matches" type="success">
+          {{ matchIndex ? `${matchIndex}/${matchCount}` : matchCount }}
+        </el-tag>
       </div>
       <div class="options-panel">
         <el-checkbox v-model="isMatchCase">Match Case</el-checkbox>
@@ -18,7 +30,7 @@
       :editor="editor"
       @hyperlink-change="showLinkEditor"
     />
-    <editor-content :editor="editor" class="content" :style="editorStyle" />
+    <editor-content :editor="editor" :class="`content file-${file.id}`" :style="editorStyle" />
   </div>
 </template>
 
@@ -26,6 +38,7 @@
 import { useTemplateRef, ref, reactive, computed, watch, nextTick, onMounted, onUnmounted  } from 'vue'
 import { useStore } from 'vuex'
 import { ElMessageBox } from 'element-plus'
+import { ArrowDown, ArrowUp } from '@element-plus/icons-vue'
 import FileEditorToolbar from './FileEditorToolbar.vue'
 import { Editor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
@@ -52,11 +65,13 @@ const props = defineProps({
 const searchInputRef = useTemplateRef('searchInput')
 const editor = ref(null)
 const updateCounter = reactive({ value: 0, previousValue: 0})
-// Search properties
+
+// Search refs
 const isSearchMode = ref(false)
 const searchString = ref('')
 const replaceString = ref('')
 const matchCount = ref(0)
+const matchIndex = ref(0)
 const isMatchCase = ref(false)
 
 const isActive = computed(() => state.currentFile.id === props.file.id)
@@ -111,6 +126,13 @@ onMounted(() => {
     },
   })
   editor.value.on('update', handleContentUpdate)
+  editor.value.on('searchMatchIndexChange', async ({ activeMatchIndex: newIndex }) => {
+    matchIndex.value = newIndex + 1
+    if (newIndex === -1) return
+    await nextTick()
+    const activeMatch = document.querySelector(`.file-${props.file.id} .search-match-active`)
+    if (activeMatch) activeMatch.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  })
   editor.value.commands.focus()
 })
 
@@ -144,6 +166,14 @@ async function search() {
   matchCount.value = editor.value.storage.searchAndReplace.results.length
 }
 
+function goNextMatch() {
+  editor.value.commands.activateSearchMatch(1)
+}
+
+function goPreviousMatch() {
+  editor.value.commands.activateSearchMatch(-1)
+}
+
 async function startSearch() {
   isSearchMode.value = true
   const { from, to } = editor.value.state.selection
@@ -163,6 +193,7 @@ function replaceAll() {
   if (!searchString.value) return
   editor.value.commands.setReplaceString(replaceString.value)
   editor.value.commands.replaceAll()
+  editor.value.commands.focus()
 }
 
 function showLinkEditor() {
@@ -242,5 +273,11 @@ defineExpose({
 .content :deep(.editable) {
   outline: none;
   min-height: 100%;
+}
+
+.arrow-button {
+  padding: 0 6px;
+  margin-left: var(--gap) !important;
+  color: var(--element-placeholder-color);
 }
 </style>

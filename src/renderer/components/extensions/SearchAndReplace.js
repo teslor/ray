@@ -6,7 +6,7 @@ const getRegex = (s, disableRegex, matchCase) => {
   return RegExp(disableRegex ? s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&') : s, matchCase ? 'gu' : 'gui')
 }
 
-const processSearches = (doc, searchString, searchResultClass) => {
+const processSearches = (doc, searchString, searchResultClass, activeMatchIndex) => {
   if (!searchString) return { decorationsToReturn: DecorationSet.empty, results: [] }
   
   let textNodesWithPosition = []
@@ -50,7 +50,9 @@ const processSearches = (doc, searchString, searchResultClass) => {
   const decorations = []
   for (let i = 0; i < results.length; i += 1) {
     const r = results[i]
-    decorations.push(Decoration.inline(r.from, r.to, { class: searchResultClass }))
+    const isActive = i === activeMatchIndex
+    const classes = isActive ? `${searchResultClass} ${searchResultClass}-active` : searchResultClass
+    decorations.push(Decoration.inline(r.from, r.to, { class: classes }))
   }
 
   return {
@@ -114,9 +116,11 @@ export const SearchAndReplace = Extension.create({
       searchString: '',
       replaceString: '',
       matchCase: false,
+      activeMatchIndex: -1,
       results: [],
       lastSearchString: '',
       lastMatchCase: false,
+      lastActiveMatchIndex: -1,
     }
   },
 
@@ -125,6 +129,8 @@ export const SearchAndReplace = Extension.create({
       setSearchData: (searchString, matchCase) => ({ editor }) => {
         editor.storage.searchAndReplace.searchString = searchString
         editor.storage.searchAndReplace.matchCase = matchCase
+        editor.storage.searchAndReplace.activeMatchIndex = -1
+        editor.emit('searchMatchIndexChange', { activeMatchIndex: -1 })
         return false
       },
       setReplaceString: (replaceString) => ({ editor }) => {
@@ -134,13 +140,29 @@ export const SearchAndReplace = Extension.create({
       replace: () => ({ editor, state, dispatch }) => {
         const { replaceString, results } = editor.storage.searchAndReplace
         replace(replaceString, results, { state, dispatch })
-        return false
+        return true
       },
       replaceAll: () => ({ editor, tr, dispatch }) => {
         const { replaceString, results } = editor.storage.searchAndReplace
         replaceAll(replaceString, results, { tr, dispatch })
-        return false
+        return true
       },
+      activateSearchMatch: (direction) => ({ editor }) => {
+        const { results, activeMatchIndex } = editor.storage.searchAndReplace
+        if (results.length === 0) return false
+
+        let newIndex
+        if (direction > 0) {
+          newIndex = (activeMatchIndex + 1) % results.length
+        } else {
+          const index = activeMatchIndex === -1 ? 0 : activeMatchIndex
+          newIndex = (index - 1 + results.length) % results.length
+        }
+
+        editor.storage.searchAndReplace.activeMatchIndex = newIndex
+        editor.emit('searchMatchIndexChange', { activeMatchIndex: newIndex })
+        return true
+      }
     }
   },
 
@@ -155,20 +177,27 @@ export const SearchAndReplace = Extension.create({
           init: () => DecorationSet.empty,
           apply({ doc, docChanged }, oldState) {
             const {
-              searchString, lastSearchString, matchCase, lastMatchCase
+              searchString, lastSearchString, matchCase, lastMatchCase, activeMatchIndex, lastActiveMatchIndex
             } = editor.storage.searchAndReplace
-            if (!docChanged && lastSearchString === searchString && matchCase === lastMatchCase) return oldState
+
+            const shouldUpdate = docChanged || searchString !== lastSearchString || 
+                                 matchCase !== lastMatchCase || 
+                                 activeMatchIndex !== lastActiveMatchIndex
+            if (!shouldUpdate) return oldState
             
             editor.storage.searchAndReplace.lastSearchString = searchString
             editor.storage.searchAndReplace.lastMatchCase = matchCase
+            editor.storage.searchAndReplace.lastActiveMatchIndex = activeMatchIndex
+            
             if (!searchString) {
               editor.storage.searchAndReplace.results = []
+              editor.storage.searchAndReplace.activeMatchIndex = -1
               return DecorationSet.empty
             }
 
             const {
               decorationsToReturn, results,
-            } = processSearches(doc, getRegex(searchString, disableRegex, matchCase), searchResultClass)
+            } = processSearches(doc, getRegex(searchString, disableRegex, matchCase), searchResultClass, activeMatchIndex)
             editor.storage.searchAndReplace.results = results
 
             return decorationsToReturn
