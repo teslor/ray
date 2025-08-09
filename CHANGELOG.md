@@ -1,3 +1,9 @@
+# 1.1.0
+
+- Add search match navigation and highlighting
+- Switch to Tiptap v3
+- Minor fixes
+
 # 1.0.0
 
 - New major features: files encryption, color themes

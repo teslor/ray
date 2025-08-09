@@ -7,7 +7,7 @@ HTML text editor with a focus on privacy.
 <br>
 Create, style and organize your personal notes!
 </p>
-<img src="https://img.shields.io/badge/version-1.0.0-green.svg" alt="v1.0.0">
+<img src="https://img.shields.io/badge/version-1.1.0-green.svg" alt="v1.1.0">
 <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license">
 
 ![Main Screenshot](/static/app.png)
@@ -28,11 +28,12 @@ Create, style and organize your personal notes!
 ### :surfer: Platforms
 For now, you can [download](https://github.com/teslor/ray/releases/latest) the app for macOS (Apple M) and Windows.
 
-### :pushpin: Next Features
-* More fonts & formatting options
-* Customizable templates
+### :pushpin: Roadmap
+* Full-text search
 * Multilingual UI
 * Sync options
+* More fonts & formatting options
+* Customizable templates
 * AI tools
 
 ### :art: Main Technology Stack
