@@ -171,6 +171,11 @@ const mutations = {
     if (i !== -1) state.activeFiles.splice(i, 1)
   },
 
+  [types.FILE_MOVE_ACTIVE](state, { fromIndex, toIndex }) {
+    const file = state.activeFiles.splice(fromIndex, 1)[0]
+    state.activeFiles.splice(toIndex, 0, file)
+  },
+
   async [types.FILE_ADD_RECENT](state, { fileName, filePath }) {
     const i = state.recentFiles.findIndex(file => file.path === filePath)
     if (i === 0) return

@@ -26,11 +26,17 @@
         </transition>
       </el-tab-pane>
     </el-tabs>
+    <div
+      v-if="dragState.isDragging"
+      class="tab-drop-marker"
+      :style="{ transform: `translateX(${dragState.markerPosition}px)` }"
+    />
   </div>
 </template>
 
 <script setup>
-import { inject, useTemplateRef, ref, computed, watch } from 'vue'
+import { inject, useTemplateRef, ref, computed, watch, onMounted } from 'vue'
+import { useEventListener } from '@vueuse/core'
 import { useStore } from 'vuex'
 import { ElMessageBox } from 'element-plus'
 import FileEditor from './FileEditor.vue'
@@ -52,6 +58,16 @@ const filesSettings = computed(() => state.settings.files)
 const busMessageFile = computed(() => state.bus.file)
 const busMessageEditor = computed(() => state.bus.editor)
 const allowShortcuts = computed(() => getters.allowShortcuts)
+
+let tabsNav = null
+
+// Drag and drop state for a tab
+const dragState = ref({
+  isDragging: false,
+  draggedIndex: -1,
+  markerPosition: 0,
+  targetIndex: -1,
+})
 
 watch(busMessageFile, (message) => {
   switch (message.text) {
@@ -119,7 +135,23 @@ watch(() => filesSettings.value.autosave, (autosave) => {
   if (autosave > 0) autosaveTimer.value = setInterval(() => { saveAllFiles() }, autosave * 60000)
 }, { immediate: true })
 
-// IPC handlers
+// Setup drag and drop handler for tabs
+onMounted(() => {
+  const setupDragHandler = (attempts = 0) => {
+    tabsNav = document.querySelector('.file-tabs .el-tabs__nav')
+    if (tabsNav) {
+      useEventListener(tabsNav, 'mousedown', onTabMouseDown)
+    } else if (attempts < 10) {
+      setTimeout(() => setupDragHandler(attempts + 1), 50)
+    }
+  }
+  setupDragHandler()
+})
+
+// =============================================================================
+// IPC Handlers
+// =============================================================================
+
 handleOpenFiles((event, filePaths) => {
   filePaths.forEach((filePath, i) => {
     dispatch('addActiveFile', {
@@ -141,7 +173,10 @@ handleOpenImage((event, image) => {
   getActiveEditorComponent().editor.chain().focus().setImage({ src: image }).run()
 })
 
-// General/file shortcut handlers
+// =============================================================================
+// General/File Shortcut Handlers
+// =============================================================================
+
 $Mousetrap.bindGlobal(['mod+n'], () => {
   if (allowShortcuts.value) dispatch('addNewActiveFile')
 })
@@ -173,6 +208,97 @@ $Mousetrap.bindGlobal(['mod+f'], () => {
 $Mousetrap.bindGlobal(['mod+k'], () => {
   if (allowShortcuts.value) getActiveEditorComponent().showLinkEditor()
 })
+
+// =============================================================================
+// Drag'n'drop Handlers for Tabs
+// =============================================================================
+
+function onTabMouseDown(event) {
+  // Don't activate drag if only one tab or if clicking on close button
+  if (activeFiles.value.length <= 1) return
+  if (event.target.closest('.is-icon-close')) return
+
+  // Find the clicked tab item
+  const tabItem = event.target.closest('.el-tabs__item')
+  if (!tabItem) return
+
+  const handleMouseMove = (e) => {
+    if (!dragState.value.isDragging) {
+      const tabElements = Array.from(tabsNav.querySelectorAll('.el-tabs__item'))
+      const draggedIndex = tabElements.indexOf(tabItem)
+      if (draggedIndex === -1) return
+      
+      dragState.value.draggedIndex = draggedIndex
+      dragState.value.isDragging = true
+    }
+    updateDropMarker(e)
+  }
+
+  const handleMouseUp = () => {
+    if (dragState.value.isDragging) performDrop()
+
+    // Cleanup
+    dragState.value.isDragging = false
+    dragState.value.draggedIndex = -1
+    dragState.value.targetIndex = -1
+    document.removeEventListener('mousemove', handleMouseMove)
+    document.removeEventListener('mouseup', handleMouseUp)
+  }
+
+  document.addEventListener('mousemove', handleMouseMove)
+  document.addEventListener('mouseup', handleMouseUp)
+}
+
+function updateDropMarker(event) {
+  const tabElements = Array.from(tabsNav.querySelectorAll('.el-tabs__item'))
+  if (!tabElements.length) return
+
+  const containerRect = tabsNav.getBoundingClientRect()
+  const mouseX = event.clientX
+
+  // Find the closest tab and determine position
+  let targetIndex = -1
+  let markerX = 0
+
+  for (let i = 0; i < tabElements.length; i++) {
+    const tabRect = tabElements[i].getBoundingClientRect()
+    const tabMidpoint = tabRect.left + tabRect.width / 2
+
+    if (mouseX < tabMidpoint) {
+      targetIndex = i
+      markerX = tabRect.left - containerRect.left
+      break
+    }
+  }
+
+  // If no target found, place marker after last tab
+  if (targetIndex === -1) {
+    targetIndex = tabElements.length
+    const lastTabRect = tabElements[tabElements.length - 1].getBoundingClientRect()
+    markerX = lastTabRect.right - containerRect.left - 1
+  }
+
+  dragState.value.targetIndex = targetIndex
+  dragState.value.markerPosition = Math.round(markerX)
+}
+
+function performDrop() {
+  const { draggedIndex, targetIndex } = dragState.value
+  if (targetIndex === -1 || draggedIndex === -1) return
+
+  // Calculate actual target index (accounting for the removed item)
+  let actualTargetIndex = targetIndex
+  if (draggedIndex < targetIndex) {
+    actualTargetIndex = targetIndex - 1
+  }
+
+  // Don't move if dropping in the same position
+  if (draggedIndex === actualTargetIndex) return
+
+  commit('FILE_MOVE_ACTIVE', { fromIndex: draggedIndex, toIndex: actualTargetIndex })
+}
+
+// =============================================================================
 
 function onTabsEdit(tabName, action) {
   if (action === 'add') dispatch('addNewActiveFile')
@@ -265,6 +391,7 @@ function closeFile(file) {
 
 <style scoped>
 .file-container {
+  position: relative;
   flex: 1;
   min-width: 300px;
 }
@@ -290,6 +417,20 @@ function closeFile(file) {
   top: 0;
   left: 5px;
   opacity: 0.6;
+}
+
+.tab-drop-marker {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2px;
+  height: calc(var(--bar-height) - 1px);
+  background-color: var(--ui-color-accent);
+  pointer-events: none;
+  z-index: 1001;
+  transform: translateX(0);
+  transition: transform 0.15s ease;
+  will-change: transform;
 }
 
 .fade-enter-active,
