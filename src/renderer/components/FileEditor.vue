@@ -9,7 +9,7 @@
           size="small"
           placeholder="Search"
           clearable
-          @keydown="goNextMatch"
+          @keydown.enter="goNextMatch"
         />
         <el-input v-model="replaceString" class="search-input" size="small" placeholder="Replace" clearable />
         <el-button type="primary" size="small" @click="replaceAll">Replace All</el-button>
@@ -167,11 +167,11 @@ async function search() {
 }
 
 function goNextMatch() {
-  editor.value.commands.activateSearchMatch(1)
+  if (matchCount.value) editor.value.commands.activateSearchMatch(1)
 }
 
 function goPreviousMatch() {
-  editor.value.commands.activateSearchMatch(-1)
+  if (matchCount.value) editor.value.commands.activateSearchMatch(-1)
 }
 
 async function startSearch() {
