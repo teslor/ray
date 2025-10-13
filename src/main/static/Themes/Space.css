@@ -103,13 +103,17 @@
     }
   }
 
+  blockquote {
+    border-left: 4px solid #ccc;
+  }
+
   pre {
     color: #f8f8f2;
     background-color: #777;
   }
 
-  blockquote {
-    border-left: 4px solid #ccc;
+  :not(pre) > code {
+    background-color: #888;
   }
 
   a {

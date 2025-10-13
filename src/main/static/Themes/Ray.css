@@ -94,7 +94,7 @@
 /* Editor content */
 
 .content {
-  color: #6f6f6f;
+  color: #5b5b5b;
   background: #f8f8f0;
 
   ul[data-type="taskList"] {
@@ -103,13 +103,17 @@
     }
   }
 
+  blockquote {
+    border-left: 4px solid #ccc;
+  }
+
   pre {
     color: #f8f8f2;
     background-color: #777;
   }
 
-  blockquote {
-    border-left: 4px solid #ccc;
+  :not(pre) > code {
+    background-color: #e3e3e3;
   }
 
   a {
