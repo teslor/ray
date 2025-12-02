@@ -7,7 +7,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   setSpellChecker: enable => ipcRenderer.send('set-spell-checker', enable),
 
   // Window
-  showWindow: color => ipcRenderer.send('show-window', color),
+  showWindow: () => ipcRenderer.send('show-window'),
   closeWindow: () => ipcRenderer.send('close-window'),
   setWindowTitle: title => ipcRenderer.send('set-window-title', title),
   zoomWindow: factor => ipcRenderer.send('zoom-window', factor),

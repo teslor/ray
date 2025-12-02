@@ -44,6 +44,7 @@ function createWindow() {
     height: 1000,
     minWidth: 800,
     minHeight: 600,
+    backgroundColor: '#f2f2f2',
   }
   mainWindowOptions.webPreferences = {
     preload: path.join(__dirname, 'preload.cjs'),
@@ -156,8 +157,7 @@ ipcMain.on('set-spell-checker', function (event, enable) {
 
 /* IPC handlers: window */
 
-ipcMain.on('show-window', function (event, color) {
-  mainWindow.setBackgroundColor(color)
+ipcMain.on('show-window', function () {
   mainWindow.show()
 })
 

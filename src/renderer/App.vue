@@ -61,9 +61,9 @@ onMounted(() => {
   }, false)
 
   setTimeout(() => {
-    showWindow(getComputedStyle(document.documentElement).getPropertyValue('--window-bg-color'))
     document.getElementById("app").style.opacity = '1'
-  }, 350)
+    showWindow()
+  }, 100)
 })
 
 // IPC handlers

@@ -8,7 +8,7 @@ export default interface ElectronApi {
   updateAppState: (payload: object) => void
   setSpellChecker: (enable: boolean) => void
 
-  showWindow: (color: string) => void
+  showWindow: () => void
   closeWindow: () => void
   setWindowTitle: (title: string) => void
   zoomWindow: (factor: number) => void
