@@ -1,0 +1,241 @@
+name: Build & Release Ray
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      build_windows:
+        description: 'Run Windows build'
+        type: boolean
+        default: true
+      build_macos:
+        description: 'Run macOS build'
+        type: boolean
+        default: true
+      build_linux:
+        description: 'Run Linux build'
+        type: boolean
+        default: true
+      generate_notes:
+        description: 'Generate release notes'
+        type: boolean
+        default: false
+      publish_release:
+        description: 'Create GitHub release'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: '22'
+
+jobs:
+  prepare:
+    name: Prepare metadata
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      version: ${{ steps.pkg.outputs.version }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Get version
+        id: pkg
+        run: |
+          if [[ "${{ github.ref_type }}" == "tag" ]]; then
+            VERSION="${{ github.ref_name }}"
+            VERSION="${VERSION#v}"  # remove 'v' prefix
+          else
+            VERSION=$(node -p "require('./package.json').version")
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Detected version $VERSION"
+
+  build_windows:
+    name: Build Windows (x64)
+    needs: prepare
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.build_windows == true }}
+    runs-on: windows-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Cache Electron
+        uses: actions/cache@v4
+        with:
+          path: ~/AppData/Local/electron/Cache
+          key: electron-win-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Windows installer
+        run: npm run build:win
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ray-win
+          path: dist/*.exe
+          retention-days: 7
+
+  build_macos:
+    name: Build macOS (arm64)
+    needs: prepare
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.build_macos == true }}
+    runs-on: macos-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Cache Electron
+        uses: actions/cache@v4
+        with:
+          path: ~/Library/Caches/electron
+          key: electron-mac-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build macOS installer (arm64)
+        run: npm run build:mac -- --arm64
+
+      - name: Upload macOS artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ray-mac
+          path: dist/*.dmg
+          retention-days: 7
+
+  build_linux:
+    name: Build Linux
+    needs: prepare
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.build_linux == true }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Cache Electron
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/electron
+          key: electron-linux-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Linux package
+        run: npm run build:linux
+
+      - name: Upload Linux artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ray-linux
+          path: |
+            dist/*.AppImage
+            dist/*.deb
+          retention-days: 7
+
+  release_notes:
+    name: Generate release notes
+    needs: prepare
+    if: ${{ github.ref_type == 'tag' || inputs.publish_release == true || inputs.generate_notes == true }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      release_notes: ${{ steps.notes.outputs.notes }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Create release notes
+        id: notes
+        run: |
+          VERSION='${{ needs.prepare.outputs.version }}'
+          node - "$VERSION" <<'EOF'
+          const fs = require('fs');
+          const version = process.argv[2];
+          const escape = (s) => s.replace(/\./g, '\\.');
+          // Match the section that starts with "# <version>" until the next "# " header or end of file
+          const pattern = new RegExp(`# ${escape(version)}\\n([\\s\\S]*?)(\\n# |$)`);
+          const match = fs.readFileSync('CHANGELOG.md', 'utf8').match(pattern);
+
+          if (!match || !match[1].trim()) {
+            console.error(`Version ${version} not found or empty in CHANGELOG.md`);
+            process.exit(1);
+          }
+
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `notes<<EON\n${match[1].trim()}\nEON\n`);
+          EOF
+
+      - name: Show generated notes
+        run: echo "${{ steps.notes.outputs.notes }}"
+
+  publish:
+    name: Publish GitHub release
+    needs:
+      - prepare
+      - release_notes
+      - build_windows
+      - build_macos
+      - build_linux
+    if: ${{ github.ref_type == 'tag' || inputs.publish_release == true }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Download Windows artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ray-win
+          path: artifacts/win
+
+      - name: Download macOS artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ray-mac
+          path: artifacts/mac
+
+      - name: Download Linux artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ray-linux
+          path: artifacts/linux
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ needs.prepare.outputs.version }}
+          name: ${{ needs.prepare.outputs.version }}
+          body: ${{ needs.release_notes.outputs.release_notes }}
+          draft: true
+          files: |
+            artifacts/win/*
+            artifacts/mac/*
+            artifacts/linux/*
