@@ -14,10 +14,12 @@
   "main": "main/main.js",
   "scripts": {
     "dev": "node scripts/dev-server.js",
-    "build": "node scripts/build.js && electron-builder",
-    "build:win": "node scripts/build.js && electron-builder --win",
-    "build:mac": "node scripts/build.js && electron-builder --mac",
-    "build:linux": "node scripts/build.js && electron-builder --linux",
+    "build": "node scripts/build.js && electron-builder --publish never",
+    "build:win": "node scripts/build.js && electron-builder --win --publish never",
+    "build:win:nsis": "node scripts/build.js && electron-builder --win nsis --publish never",
+    "build:win:portable": "node scripts/build.js && electron-builder --win portable --publish never",
+    "build:mac": "node scripts/build.js && electron-builder --mac --publish never",
+    "build:linux": "node scripts/build.js && electron-builder --linux --publish never",
     "lint": "eslint ."
   },
   "repository": "https://github.com/teslor/ray",

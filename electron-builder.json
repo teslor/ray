@@ -1,23 +1,33 @@
 {
   "appId": "com.electron.ray",
+  "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+  "removePackageScripts": true,
   "directories": {
     "output": "dist"
   },
   "win": {
-    "target": "nsis",
+    "target": ["nsis", "portable"],
     "icon": "static/icon.ico"
-  },
-  "mac": {
-    "category": "public.app-category.productivity",
-    "icon": "static/icon.icns"
-  },
-  "linux":  {
-    "target": ["snap"]
   },
   "nsis": {
     "oneClick": false,
     "allowToChangeInstallationDirectory": true,
-    "createDesktopShortcut": "always"
+    "createDesktopShortcut": "always",
+    "artifactName": "${productName}-${version}-${os}-${arch}-setup.${ext}"
+  },
+  "portable": {
+    "artifactName": "${productName}-${version}-${os}-${arch}-portable.${ext}"
+  },
+  "mac": {
+    "category": "public.app-category.productivity",
+    "icon": "static/icon.icns",
+    "hardenedRuntime": true,
+    "gatekeeperAssess": false
+  },
+  "linux": {
+    "target": ["AppImage", "deb"],
+    "category": "Utility",
+    "icon": "static/icon.png"
   },
   "files": [
     {

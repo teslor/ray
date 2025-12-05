@@ -10,6 +10,10 @@ import log from 'loglevel'
 import { getThemeList, copyThemes, readThemeStyles } from './utils.js'
 import { encryptFile, decryptFile } from './crypto.js'
 
+// Keep portable userData dir next to the executable
+const portableDir = process.env.PORTABLE_EXECUTABLE_DIR
+if (portableDir) app.setPath('userData', path.join(portableDir, 'RayData'))
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const appState = {
   configLoaded: false,
