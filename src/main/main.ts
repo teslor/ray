@@ -15,6 +15,7 @@ const portableDir = process.env.PORTABLE_EXECUTABLE_DIR
 if (portableDir) app.setPath('userData', path.join(portableDir, 'RayData'))
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const isDev = process.env.NODE_ENV === 'development'
 const appState = {
   configLoaded: false,
   themesDefined: false,
@@ -25,7 +26,7 @@ const appState = {
   version: ''
 }
 
-if (process.env.NODE_ENV !== 'development') {
+if (!isDev) {
   log.setLevel('error')
   appState.version = app.getVersion()
 } else {
@@ -77,15 +78,13 @@ function createWindow() {
 
   mainWindow = new BrowserWindow(mainWindowOptions)
 
-  if (process.env.NODE_ENV === 'development') {
+  if (isDev) {
     const rendererPort = process.argv[2]
     mainWindow.loadURL(`http://localhost:${rendererPort}`)
-  }
-  else {
+  } else {
     mainWindow.loadFile(path.join(app.getAppPath(), 'renderer', 'index.html'))
+    mainWindow.setMenu(null)
   }
-
-  mainWindow.setMenu(null)
 
   mainWindow.allowClose = false
   mainWindow.on('close', (event) => {
