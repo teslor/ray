@@ -7,8 +7,7 @@ HTML text editor with a focus on privacy.
 <br>
 Create, style and organize your personal notes!
 </p>
-<img src="https://img.shields.io/badge/version-1.1.0-green.svg" alt="v1.1.0">
-<img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license">
+<p><img src="https://img.shields.io/badge/version-1.1.0-green.svg" alt="v1.1.0"> <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license"></p>
 
 ![Main Screenshot](/static/app.png)
 
