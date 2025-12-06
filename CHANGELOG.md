@@ -1,3 +1,10 @@
+# 1.2.0
+
+- Add drag and drop for file tabs
+- Add Linux build and Windows portable build
+- Fix search input keyboard handling
+- Fix background color for inline code
+
 # 1.1.0
 
 - Add search match navigation and highlighting

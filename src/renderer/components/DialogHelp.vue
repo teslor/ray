@@ -130,7 +130,7 @@
       </el-tab-pane>
 
       <el-tab-pane label="About" class="about-section">
-        <h2>Ray 1.1.0</h2>
+        <h2>Ray 1.2.0</h2>
         <p><a class="ray-link" href="" @click.prevent="openUrl('https://github.com/teslor/ray')">https://github.com/teslor/ray</a></p>
         <p>Released under the MIT license.</p>
       </el-tab-pane>
