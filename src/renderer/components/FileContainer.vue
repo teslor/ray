@@ -27,7 +27,7 @@
       </el-tab-pane>
     </el-tabs>
     <div
-      v-if="dragState.isDragging"
+      v-if="dragState.isDragging && dragState.isInsideTabsArea"
       class="tab-drop-marker"
       :style="{ transform: `translateX(${dragState.markerPosition}px)` }"
     />
@@ -67,6 +67,7 @@ const dragState = ref({
   draggedIndex: -1,
   markerPosition: 0,
   targetIndex: -1,
+  isInsideTabsArea: false,
 })
 
 watch(busMessageFile, (message) => {
@@ -138,7 +139,7 @@ watch(() => filesSettings.value.autosave, (autosave) => {
 // Setup drag and drop handler for tabs
 onMounted(() => {
   const setupDragHandler = (attempts = 0) => {
-    tabsNav = document.querySelector('.file-tabs .el-tabs__nav')
+    tabsNav = document.querySelector('.file-tabs .el-tabs__nav-scroll')
     if (tabsNav) {
       useEventListener(tabsNav, 'mousedown', onTabMouseDown)
     } else if (attempts < 10) {
@@ -222,16 +223,21 @@ function onTabMouseDown(event) {
   const tabItem = event.target.closest('.el-tabs__item')
   if (!tabItem) return
 
+  const tabElements = Array.from(tabsNav.querySelectorAll('.el-tabs__item'))
+  if (!tabElements.length) return
+
+  const containerRect = document.querySelector('.file-container').getBoundingClientRect()
+  const tabsNavRect = tabsNav.getBoundingClientRect()
+
   const handleMouseMove = (e) => {
     if (!dragState.value.isDragging) {
-      const tabElements = Array.from(tabsNav.querySelectorAll('.el-tabs__item'))
       const draggedIndex = tabElements.indexOf(tabItem)
       if (draggedIndex === -1) return
       
       dragState.value.draggedIndex = draggedIndex
       dragState.value.isDragging = true
     }
-    updateDropMarker(e)
+    updateDropMarker(e, tabElements, containerRect, tabsNavRect)
   }
 
   const handleMouseUp = () => {
@@ -241,6 +247,7 @@ function onTabMouseDown(event) {
     dragState.value.isDragging = false
     dragState.value.draggedIndex = -1
     dragState.value.targetIndex = -1
+    dragState.value.isInsideTabsArea = false
     document.removeEventListener('mousemove', handleMouseMove)
     document.removeEventListener('mouseup', handleMouseUp)
   }
@@ -249,13 +256,9 @@ function onTabMouseDown(event) {
   document.addEventListener('mouseup', handleMouseUp)
 }
 
-function updateDropMarker(event) {
-  const tabElements = Array.from(tabsNav.querySelectorAll('.el-tabs__item'))
-  if (!tabElements.length) return
-
-  const containerRect = tabsNav.getBoundingClientRect()
+function updateDropMarker(event, tabElements, containerRect, tabsNavRect) {
   const mouseX = event.clientX
-
+  
   // Find the closest tab and determine position
   let targetIndex = -1
   let markerX = 0
@@ -278,19 +281,31 @@ function updateDropMarker(event) {
     markerX = lastTabRect.right - containerRect.left - 1
   }
 
+  // Hide marker if it goes outside the visible area
+  // Boundaries are inclusive (marker exactly on the edge should be visible)
+  const markerXInt = Math.round(markerX)
+  const markerWidth = 2 // must match .tab-drop-marker width
+  const markerViewportLeft = containerRect.left + markerXInt
+  const markerViewportRight = markerViewportLeft + markerWidth
+  const isMarkerVisible = markerViewportRight >= tabsNavRect.left && markerViewportLeft <= tabsNavRect.right
+  dragState.value.isInsideTabsArea = isMarkerVisible
+
+  if (!isMarkerVisible) {
+    dragState.value.targetIndex = -1
+    return
+  }
+
   dragState.value.targetIndex = targetIndex
-  dragState.value.markerPosition = Math.round(markerX)
+  dragState.value.markerPosition = markerXInt
 }
 
 function performDrop() {
-  const { draggedIndex, targetIndex } = dragState.value
-  if (targetIndex === -1 || draggedIndex === -1) return
+  const { draggedIndex, targetIndex, isInsideTabsArea } = dragState.value
+  if (!isInsideTabsArea || targetIndex === -1 || draggedIndex === -1) return
 
   // Calculate actual target index (accounting for the removed item)
   let actualTargetIndex = targetIndex
-  if (draggedIndex < targetIndex) {
-    actualTargetIndex = targetIndex - 1
-  }
+  if (draggedIndex < targetIndex) actualTargetIndex = targetIndex - 1
 
   // Don't move if dropping in the same position
   if (draggedIndex === actualTargetIndex) return
